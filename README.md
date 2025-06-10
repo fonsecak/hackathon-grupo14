@@ -7,4 +7,4 @@ Uma plataforma simples e moderna para a organização e divulgação de eventos 
 
 ### ✨ Tecnologias Utilizadas
 
-[![My Skills](https://skillicons.dev/icons?i=java,maven,php,ts,nodejs,mysql)](https://skillicons.dev)
+[![My Skills](https://skillicons.dev/icons?i=java,maven,php,ts,nodejs,mysql,git,github)](https://skillicons.dev)
