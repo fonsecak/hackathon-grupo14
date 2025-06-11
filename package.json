@@ -4,14 +4,16 @@
   "description": "Uma plataforma moderna para a organização e divulgação de eventos acadêmicos da UniALFA.",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon src/index.js",
+    "dev": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "bootstrap": "^5.3.6",
+    "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "knex": "^3.1.0",
