@@ -4,6 +4,7 @@ module.exports = {
   async index(req, res) {
     const eventos = await db('eventos').select('*');
     return res.json(eventos);
+   
   },
 
   async store(req, res) {
