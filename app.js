@@ -1,6 +1,7 @@
 const express = require('express');
 const eventosRoutes = require('./src/routes/eventos');
 const usuariosRoutes = require('./src/routes/usuarios'); 
+const loginRoutes = require('./src/routes/login');
 const app = express();
 const cors = require('cors');
 
@@ -10,6 +11,8 @@ app.use(express.json());
 
 app.use('/api/eventos', eventosRoutes);
 app.use('/api/usuarios', usuariosRoutes);
+app.use('/login', loginRoutes);
+
 
 app.listen(3000, () => {
   console.log('Servidor rodando na porta 3000');
