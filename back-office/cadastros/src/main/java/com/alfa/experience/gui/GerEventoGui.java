@@ -48,7 +48,12 @@ public class GerEventoGui extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setVisible(true);
 
-        //
+        JLabel titulo = new JLabel("Gerenciamento de Eventos");
+
+        JPanel painelTitulo = new JPanel();
+        painelTitulo.add(titulo, BorderLayout.CENTER);
+
+        add(painelTitulo, BorderLayout.NORTH);
         add(montarCampos());
     }
 
@@ -118,16 +123,10 @@ public class GerEventoGui extends JFrame {
         jPanel.add(jlEspecialidade, guiUtils.montarConstraints(0, 10));
         jPanel.add(tfEspecialidade, guiUtils.montarConstraints(1, 10));
 
-        jPanel.add(jlPalestrante, guiUtils.montarConstraints(0, 10));
-        jPanel.add(tfPalestrante, guiUtils.montarConstraints(1, 10));
-
         jPanel.add(jlVagasMaximas, guiUtils.montarConstraints(0, 11));
         jPanel.add(tfVagasMaximas, guiUtils.montarConstraints(1, 11));
 
-        jPanel.add(jlPalestrante, guiUtils.montarConstraints(0, 12));
-        jPanel.add(tfPalestrante, guiUtils.montarConstraints(1, 12));
-
-        jPanel.add(btConfirmar, guiUtils.montarConstraints(1,15));
+        jPanel.add(btConfirmar, guiUtils.montarConstraints(1,12));
 
         return jPanel;
     }
@@ -136,7 +135,6 @@ public class GerEventoGui extends JFrame {
 
         var servico = new EventoService();
         var evento = new Evento();
-
 
         evento.setId(tfId.getText().isEmpty() ? null : Long.valueOf(tfId.getText()));
         evento.setNome(tfNome.getText());
@@ -154,6 +152,23 @@ public class GerEventoGui extends JFrame {
         evento.setVagasMax(tfVagasMaximas.getText());
 
         servico.salvar(evento);
+        limparCampos();
+    }
+
+    private void limparCampos() {
+        tfId.setText(null);
+        tfNome.setText(null);
+        tfDtInicio.setText(null);
+        tfDtFim.setText(null);
+        tfLocal.setText(null);
+        tfValorIncricao.setText(null);
+        tfPublicoAlvo.setText(null);
+        tfObjetivo.setText(null);
+        tfBanner.setText(null);
+        tfId.setText(null);
+        tfPalestrante.setText(null);
+        tfEspecialidade.setText(null);
+        tfVagasMaximas.setText(null);
     }
 
     // Esse método serve para criar um campo formatado para o usuário digitar a data e a hora.
