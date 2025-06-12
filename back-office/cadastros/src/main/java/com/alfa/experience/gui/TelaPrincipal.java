@@ -25,7 +25,7 @@ public class TelaPrincipal extends JFrame {
         jPanel.add(btGerEventos, guiUtils.montarConstraints(0,1));
         jPanel.add(btListarAlunos, guiUtils.montarConstraints(0,2));
 
-        btGerEventos.addActionListener(e -> new TelaGerEventos().GerEventos());
+        btGerEventos.addActionListener(e -> new GerEventoGui().GerEventos());
         return jPanel;
     }
 
