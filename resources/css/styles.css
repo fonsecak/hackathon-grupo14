@@ -48,7 +48,7 @@ main label {
 }
 
 main button {
-    background-color: #022840 !important;
+    background-color: #005991 !important;
     color: #f2f2f2 !important;
     border: none !important;
     padding: 10px 20px;
@@ -69,6 +69,13 @@ body {
 .event-card:hover {
   transform: scale(1.02);
 }
+
+.event-card a {
+  background-color: #005991 !important;
+  color: #f2f2f2 !important;
+  text-decoration: none;
+}
+
 
 .event-card img {
   height: 120px;
@@ -124,3 +131,5 @@ footer {
     text-align: center;
     margin-top: auto; 
 }
+
+
