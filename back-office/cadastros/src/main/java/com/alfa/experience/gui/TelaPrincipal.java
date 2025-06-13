@@ -1,12 +1,14 @@
 package com.alfa.experience.gui;
 
+import com.alfa.experience.service.EventoService;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class TelaPrincipal extends JFrame {
     private JButton btGerEventos, btListarAlunos;
 
-    public TelaPrincipal(){
+    public TelaPrincipal(EventoService eventoService){
         var guiUtils = new  GuiUtils();
         // Configura a própria TelaPrincipal como o JFrame utilizando THIS
         guiUtils.montarTelaPadrao(this,"Gerenciar Eventos",600,800);
@@ -25,7 +27,7 @@ public class TelaPrincipal extends JFrame {
         jPanel.add(btGerEventos, guiUtils.montarConstraints(0,1));
         jPanel.add(btListarAlunos, guiUtils.montarConstraints(0,2));
 
-        btGerEventos.addActionListener(e -> new GerEventoGui().GerEventos());
+        btGerEventos.addActionListener(e -> new GerEventoGui().GerEventos(new EventoService()));
         return jPanel;
     }
 

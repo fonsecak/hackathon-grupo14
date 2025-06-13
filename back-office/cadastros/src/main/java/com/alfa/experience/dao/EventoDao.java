@@ -2,10 +2,10 @@ package com.alfa.experience.dao;
 
 import com.alfa.experience.model.Evento;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EventoDao extends Dao implements DaoInterface {
-
 
     @Override
     public boolean insert(Object entity) {
@@ -43,13 +43,66 @@ public class EventoDao extends Dao implements DaoInterface {
     }
 
     @Override
-    public List<Object> select(Long pk) {
-        return List.of();
+    public Object select(Long pk) {
+        var ev = new Evento();
+        try {
+            var selectSql = "select * from eventos where id=?";
+
+            var ps = getConnection().prepareStatement(selectSql);
+            ps.setLong(1, pk);
+
+            var rs = ps.executeQuery();
+
+            while (rs.next()){
+                ev.setId(rs.getLong("id"));
+                ev.setNome(rs.getString("nome"));
+                ev.setDtInicio(rs.getString("data_hora_inicio"));
+                ev.setDtFim(rs.getString("data_hora_fim"));
+                ev.setLocal(rs.getString("local"));
+                ev.setValorIncricao(rs.getString("valor_inscricao"));
+                ev.setPublicoAlvo(rs.getString("publico_alvo"));
+                ev.setObjetivo(rs.getString("objetivo"));
+                ev.setBanner(rs.getString("banner"));
+                ev.setPalestrante(rs.getString("palestrante"));
+                ev.setEspecialidade(rs.getString("especialidade"));
+                ev.setVagasMax(rs.getString("vagas_maxima"));
+            }
+            rs.close();
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        return ev;
     }
 
     @Override
     public List<Object> selectAll() {
-        return List.of();
+        List<Evento> eventos = new ArrayList<>();
+        try {
+            var selectSql = "select * from eventos";
+            var rs = getConnection().prepareStatement(selectSql).executeQuery();
+            while (rs.next()){
+                var e = new Evento();
+                e.setId(rs.getLong("id"));
+                e.setNome(rs.getString("nome"));
+                e.setDtInicio(rs.getString("data_hora_inicio"));
+                e.setDtFim(rs.getString("data_hora_fim"));
+                e.setLocal(rs.getString("local"));
+                e.setValorIncricao(rs.getString("valor_inscricao"));
+                e.setPublicoAlvo(rs.getString("publico_alvo"));
+                e.setObjetivo(rs.getString("objetivo"));
+                e.setBanner(rs.getString("banner"));
+                e.setPalestrante(rs.getString("palestrante"));
+                e.setEspecialidade(rs.getString("especialidade"));
+                e.setVagasMax(rs.getString("vagas_maxima"));
+                eventos.add(e);
+            }
+            rs.close();
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        return new ArrayList<>(eventos);
     }
-
 }
+
+
+

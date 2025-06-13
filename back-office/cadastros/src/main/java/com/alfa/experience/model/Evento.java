@@ -26,11 +26,12 @@ public class Evento {
 
     }
 
-    public Evento(Long id, String vagasMax, String especialidade, String palestrante, String objetivo, String publicoAlvo, String valorIncricao, String local, String dtFim, String dtInicio, String nome) {
+    public Evento(Long id, String vagasMax, String especialidade, String palestrante, String banner, String objetivo, String publicoAlvo, String valorIncricao, String local, String dtFim, String dtInicio, String nome) {
         this.id = id;
         this.vagasMax = vagasMax;
         this.especialidade = especialidade;
         this.palestrante = palestrante;
+        this.banner = banner;
         this.objetivo = objetivo;
         this.publicoAlvo = publicoAlvo;
         this.valorIncricao = valorIncricao;
@@ -39,7 +40,6 @@ public class Evento {
         this.dtInicio = dtInicio;
         this.nome = nome;
     }
-
 
     public Long getId() {
         return id;

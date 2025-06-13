@@ -1,6 +1,7 @@
 package com.alfa.experience;
 
 import com.alfa.experience.gui.TelaPrincipal;
+import com.alfa.experience.service.EventoService;
 
 import javax.swing.*;
 
@@ -10,7 +11,7 @@ public class Main {
     }
 
     private static void iniciar() {
-        var telaPrincipal = new TelaPrincipal();
+        var telaPrincipal = new TelaPrincipal(new EventoService());
         telaPrincipal.setVisible(true);
     }
 }
