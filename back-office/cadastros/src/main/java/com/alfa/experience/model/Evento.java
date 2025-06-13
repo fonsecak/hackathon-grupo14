@@ -1,45 +1,40 @@
 package com.alfa.experience.model;
 
+import java.sql.Timestamp;
+
 public class Evento {
     private Long id;
     private String nome;
-    private String dtInicio;
-    private String dtFim;
+    private Timestamp dtInicio;
+    private Timestamp dtFim;
     private String local;
-    private String valorIncricao;
+    private String valorInscricao;
     private String publicoAlvo;
     private String objetivo;
     private String banner;
     private String palestrante;
     private String especialidade;
-    private String vagasMax;
+    private Integer vagasMaximas;
 
-    public String getBanner() {
-        return banner;
+    public Evento() {
     }
 
-    public void setBanner(String banner) {
-        this.banner = banner;
-    }
-
-    public Evento(){
-
-    }
-
-    public Evento(Long id, String vagasMax, String especialidade, String palestrante, String objetivo, String publicoAlvo, String valorIncricao, String local, String dtFim, String dtInicio, String nome) {
+    public Evento(Long id, String nome, Timestamp dtInicio, Timestamp dtFim, String local,
+                  String valorInscricao, String publicoAlvo, String objetivo, String banner,
+                  String palestrante, String especialidade, Integer vagasMaximas) {
         this.id = id;
-        this.vagasMax = vagasMax;
-        this.especialidade = especialidade;
-        this.palestrante = palestrante;
-        this.objetivo = objetivo;
-        this.publicoAlvo = publicoAlvo;
-        this.valorIncricao = valorIncricao;
-        this.local = local;
-        this.dtFim = dtFim;
-        this.dtInicio = dtInicio;
         this.nome = nome;
+        this.dtInicio = dtInicio;
+        this.dtFim = dtFim;
+        this.local = local;
+        this.valorInscricao = valorInscricao;
+        this.publicoAlvo = publicoAlvo;
+        this.objetivo = objetivo;
+        this.banner = banner;
+        this.palestrante = palestrante;
+        this.especialidade = especialidade;
+        this.vagasMaximas = vagasMaximas;
     }
-
 
     public Long getId() {
         return id;
@@ -57,19 +52,19 @@ public class Evento {
         this.nome = nome;
     }
 
-    public String getDtInicio() {
+    public Timestamp getDtInicio() {
         return dtInicio;
     }
 
-    public void setDtInicio(String dtInicio) {
+    public void setDtInicio(Timestamp dtInicio) {
         this.dtInicio = dtInicio;
     }
 
-    public String getDtFim() {
+    public Timestamp getDtFim() {
         return dtFim;
     }
 
-    public void setDtFim(String dtFim) {
+    public void setDtFim(Timestamp dtFim) {
         this.dtFim = dtFim;
     }
 
@@ -81,12 +76,12 @@ public class Evento {
         this.local = local;
     }
 
-    public String getValorIncricao() {
-        return valorIncricao;
+    public String getValorInscricao() {
+        return valorInscricao;
     }
 
-    public void setValorIncricao(String valorIncricao) {
-        this.valorIncricao = valorIncricao;
+    public void setValorInscricao(String valorInscricao) {
+        this.valorInscricao = valorInscricao;
     }
 
     public String getPublicoAlvo() {
@@ -105,6 +100,14 @@ public class Evento {
         this.objetivo = objetivo;
     }
 
+    public String getBanner() {
+        return banner;
+    }
+
+    public void setBanner(String banner) {
+        this.banner = banner;
+    }
+
     public String getPalestrante() {
         return palestrante;
     }
@@ -121,12 +124,11 @@ public class Evento {
         this.especialidade = especialidade;
     }
 
-    public String getVagasMax() {
-        return vagasMax;
+    public Integer getVagasMaximas() {
+        return vagasMaximas;
     }
 
-    public void setVagasMax(String vagasMax) {
-        this.vagasMax = vagasMax;
+    public void setVagasMaximas(Integer vagasMaximas) {
+        this.vagasMaximas = vagasMaximas;
     }
-
 }

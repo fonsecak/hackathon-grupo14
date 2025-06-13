@@ -4,6 +4,8 @@ import com.alfa.experience.model.Evento;
 import com.alfa.experience.service.EventoService;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -14,6 +16,9 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 public class GerEventoGui extends JFrame {
+
+    private final EventoService eventoService;
+
     private JLabel jlId;
     private JTextField tfId;
     private JLabel jlNome;
@@ -40,21 +45,27 @@ public class GerEventoGui extends JFrame {
     private JTextField tfVagasMaximas;
 
     private JButton btConfirmar;
+    private JTable tbEventos;
 
+    public GerEventoGui(EventoService eventoService) {
+        this.eventoService = eventoService;
+        mostrarTela();
+    }
 
-    public void GerEventos(){
+    private void mostrarTela() {
         var guiUtils = new GuiUtils();
-        guiUtils.montarTelaPadrao(this, "Gerenciamento de Eventos", 600, 600);
+        guiUtils.montarTelaPadrao(this, "Gerenciamento de Eventos - AlfaExperience", 800, 600);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setVisible(true);
 
-        JLabel titulo = new JLabel("Gerenciamento de Eventos");
-
-        JPanel painelTitulo = new JPanel();
-        painelTitulo.add(titulo, BorderLayout.CENTER);
-
+        JLabel titulo = new JLabel("Gerenciamento de Eventos", SwingConstants.CENTER);
+        titulo.setFont(new Font("Arial", Font.BOLD, 16));
+        JPanel painelTitulo = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        painelTitulo.add(titulo);
         add(painelTitulo, BorderLayout.NORTH);
-        add(montarCampos());
+        add(montarCampos(), BorderLayout.CENTER);
+        add(montarTabelaDados(), BorderLayout.SOUTH);
+
+        setVisible(true);
     }
 
     private JPanel montarCampos() {
@@ -64,7 +75,7 @@ public class GerEventoGui extends JFrame {
         jlId = new JLabel("ID");
         tfId = new JTextField(20);
         tfId.setEditable(false);
-        jlNome = new JLabel("Nome");
+        jlNome = new JLabel("Titulo");
         tfNome = new JTextField(20);
         jlDtInicio = new JLabel("Data de inicio");
         tfDtInicio = criarCampoData();
@@ -93,40 +104,40 @@ public class GerEventoGui extends JFrame {
         jPanel.add(jlId, guiUtils.montarConstraints(0, 0));
         jPanel.add(tfId, guiUtils.montarConstraints(1, 0));
 
-        jPanel.add(jlNome, guiUtils.montarConstraints(0, 1));
-        jPanel.add(tfNome, guiUtils.montarConstraints(1, 1));
+        jPanel.add(jlNome, guiUtils.montarConstraints(2, 0));
+        jPanel.add(tfNome, guiUtils.montarConstraints(3, 0));
 
-        jPanel.add(jlDtInicio, guiUtils.montarConstraints(0, 2));
-        jPanel.add(tfDtInicio, guiUtils.montarConstraints(1, 2));
+        jPanel.add(jlDtInicio, guiUtils.montarConstraints(0, 1));
+        jPanel.add(tfDtInicio, guiUtils.montarConstraints(1, 1));
 
-        jPanel.add(jlDtFim, guiUtils.montarConstraints(0, 3));
-        jPanel.add(tfDtFim, guiUtils.montarConstraints(1, 3));
+        jPanel.add(jlDtFim, guiUtils.montarConstraints(2, 1));
+        jPanel.add(tfDtFim, guiUtils.montarConstraints(3, 1));
 
-        jPanel.add(jlLocal, guiUtils.montarConstraints(0, 4));
-        jPanel.add(tfLocal, guiUtils.montarConstraints(1, 4));
+        jPanel.add(jlLocal, guiUtils.montarConstraints(0, 2));
+        jPanel.add(tfLocal, guiUtils.montarConstraints(1, 2));
 
-        jPanel.add(jlValorIncricao, guiUtils.montarConstraints(0, 5));
-        jPanel.add(tfValorIncricao, guiUtils.montarConstraints(1, 5));
+        jPanel.add(jlValorIncricao, guiUtils.montarConstraints(2, 2));
+        jPanel.add(tfValorIncricao, guiUtils.montarConstraints(3, 2));
 
-        jPanel.add(jlPublicoAlvo, guiUtils.montarConstraints(0, 6));
-        jPanel.add(tfPublicoAlvo, guiUtils.montarConstraints(1, 6));
+        jPanel.add(jlPublicoAlvo, guiUtils.montarConstraints(0, 3));
+        jPanel.add(tfPublicoAlvo, guiUtils.montarConstraints(1, 3));
 
-        jPanel.add(jlObjetivo, guiUtils.montarConstraints(0, 7));
-        jPanel.add(tfObjetivo, guiUtils.montarConstraints(1, 7));
+        jPanel.add(jlObjetivo, guiUtils.montarConstraints(2, 3));
+        jPanel.add(tfObjetivo, guiUtils.montarConstraints(3, 3));
 
-        jPanel.add(jlBanner, guiUtils.montarConstraints(0, 8));
-        jPanel.add(tfBanner, guiUtils.montarConstraints(1, 8));
+        jPanel.add(jlBanner, guiUtils.montarConstraints(0, 4));
+        jPanel.add(tfBanner, guiUtils.montarConstraints(1, 4));
 
-        jPanel.add(jlPalestrante, guiUtils.montarConstraints(0, 9));
-        jPanel.add(tfPalestrante, guiUtils.montarConstraints(1, 9));
+        jPanel.add(jlPalestrante, guiUtils.montarConstraints(2, 4));
+        jPanel.add(tfPalestrante, guiUtils.montarConstraints(3, 4));
 
-        jPanel.add(jlEspecialidade, guiUtils.montarConstraints(0, 10));
-        jPanel.add(tfEspecialidade, guiUtils.montarConstraints(1, 10));
+        jPanel.add(jlEspecialidade, guiUtils.montarConstraints(0, 5));
+        jPanel.add(tfEspecialidade, guiUtils.montarConstraints(1, 5));
 
-        jPanel.add(jlVagasMaximas, guiUtils.montarConstraints(0, 11));
-        jPanel.add(tfVagasMaximas, guiUtils.montarConstraints(1, 11));
+        jPanel.add(jlVagasMaximas, guiUtils.montarConstraints(2, 5));
+        jPanel.add(tfVagasMaximas, guiUtils.montarConstraints(3, 5));
 
-        jPanel.add(btConfirmar, guiUtils.montarConstraints(1,12));
+        jPanel.add(btConfirmar, guiUtils.montarConstraints(1,6));
 
         return jPanel;
     }
@@ -139,17 +150,17 @@ public class GerEventoGui extends JFrame {
         evento.setId(tfId.getText().isEmpty() ? null : Long.valueOf(tfId.getText()));
         evento.setNome(tfNome.getText());
         Timestamp inicio = obterTimestampValido(tfDtInicio);
-        evento.setDtInicio(String.valueOf(inicio));
+        evento.setDtInicio(Timestamp.valueOf(String.valueOf(inicio)));
         Timestamp fim = obterTimestampValido(tfDtFim);
-        evento.setDtFim(String.valueOf(fim));
+        evento.setDtFim(Timestamp.valueOf(String.valueOf(fim)));
         evento.setLocal(tfLocal.getText());
-        evento.setValorIncricao(tfValorIncricao.getText());
+        evento.setValorInscricao(tfValorIncricao.getText());
         evento.setPublicoAlvo(tfPublicoAlvo.getText());
         evento.setObjetivo(tfObjetivo.getText());
         evento.setBanner(tfBanner.getText());
         evento.setPalestrante(tfPalestrante.getText());
         evento.setEspecialidade(tfEspecialidade.getText());
-        evento.setVagasMax(tfVagasMaximas.getText());
+        evento.setVagasMaximas(Integer.valueOf(tfVagasMaximas.getText()));
 
         servico.salvar(evento);
         limparCampos();
@@ -171,9 +182,67 @@ public class GerEventoGui extends JFrame {
         tfVagasMaximas.setText(null);
     }
 
-    // Esse método serve para criar um campo formatado para o usuário digitar a data e a hora.
-    // Eu uso o MaskFormatter para definir o formato "dd/MM/yyyy HH:mm", que obriga a digitação correta.
+    private JScrollPane montarTabelaDados(){
+        tbEventos = new JTable();
+        tbEventos.setDefaultEditor(Object.class, null);
+        tbEventos.getSelectionModel().addListSelectionListener(this::selecionar);
+        tbEventos.setModel(carregarEventos());
+        return new JScrollPane(tbEventos);
+    }
+
+    private DefaultTableModel carregarEventos() {
+        var tableModel = new DefaultTableModel();
+        tableModel.addColumn("ID");
+        tableModel.addColumn("Nome");
+        tableModel.addColumn("Dt_Inicio");
+        tableModel.addColumn("Dt_Fim");
+        tableModel.addColumn("Palestrante");
+        tableModel.addColumn("Max Incrições");
+        try {
+            eventoService.listarTodos().forEach(a ->
+                    tableModel.addRow(new Object[]{a.getId(), a.getNome(), a.getDtInicio(), a.getDtFim(), a.getPalestrante(), a.getVagasMaximas()})
+            );
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao carregar eventos: " + e.getMessage());
+        }
+        return tableModel;
+    }
+
+    private void selecionar(ListSelectionEvent e) {
+        if (!e.getValueIsAdjusting()) {
+            int linha = tbEventos.getSelectedRow();
+            if (linha != -1) {
+                try {
+                    Long id = (Long) tbEventos.getValueAt(linha, 0);
+                    Evento evento = EventoService.buscarPorId(id);
+                    tfId.setText(String.valueOf(evento.getId()));
+                    tfNome.setText(evento.getNome());
+                    tfDtInicio.setText(formatarTimestamp(evento.getDtInicio()));
+                    tfDtFim.setText(formatarTimestamp(evento.getDtFim()));
+                    tfLocal.setText(evento.getLocal());
+                    tfValorIncricao.setText(evento.getValorInscricao());
+                    tfPublicoAlvo.setText(evento.getPublicoAlvo());
+                    tfObjetivo.setText(evento.getObjetivo());
+                    tfBanner.setText(evento.getBanner());
+                    tfPalestrante.setText(evento.getPalestrante());
+                    tfEspecialidade.setText(evento.getEspecialidade());
+                    tfVagasMaximas.setText(String.valueOf(evento.getVagasMaximas()));
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Erro ao carregar evento: " + ex.getMessage());
+                }
+            }
+        }
+    }
+
+    private String formatarTimestamp(Timestamp timestamp) {
+        if (timestamp == null) return "";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        return timestamp.toLocalDateTime().format(formatter);
+    }
+
     public static JFormattedTextField criarCampoData() {
+        // Esse método serve para criar um campo formatado para o usuário digitar a data e a hora.
+        // Eu uso o MaskFormatter para definir o formato "dd/MM/yyyy HH:mm", que obriga a digitação correta.
         try {
             MaskFormatter dataFormatter = new MaskFormatter("##/##/#### ##:##");
             dataFormatter.setPlaceholderCharacter('_');
@@ -185,14 +254,13 @@ public class GerEventoGui extends JFrame {
         }
     }
 
-    // Esse método é responsável por pegar o valor digitado no campo formatado e converter para Timestamp.
     public static Timestamp obterTimestampValido(JFormattedTextField campo) {
+        // Esse método é responsável por pegar o valor digitado no campo formatado e converter para Timestamp.
         String texto = campo.getText().trim();
         // Aqui eu verifico se o campo ainda está com espaços em branco ou preenchido com valor inválido.
         if (texto.contains("_") || texto.equals("00/00/0000 00:00")) {
             return null;
         }
-
         try {
             // Eu uso o DateTimeFormatter para converter o texto do campo para um LocalDateTime,
             // usando o padrão que inclui data e hora.
