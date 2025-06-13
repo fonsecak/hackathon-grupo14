@@ -20,7 +20,7 @@ Guilherme Augusto Cardoso Carrera - RA - 14651
 
 ###  Tecnologias Utilizadas
 
-[![My Skills](https://skillicons.dev/icons?i=java,maven,php,js,nodejs,html,css,mysql,git,github)](https://skillicons.dev)
+[![My Skills](https://skillicons.dev/icons?i=java,maven,php,js,nodejs,html,css,bootstrap,mysql,git,github)](https://skillicons.dev)
 
 
 ---
