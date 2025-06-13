@@ -24,3 +24,8 @@ Guilherme Augusto Cardoso Carrera - RA - 14651
 
 
 ---
+
+
+Prototipo de baixa fidelidade
+
+https://www.figma.com/design/65wSlUl60gegzXIDbu8kP0/UX-Hackaton-Equipe-14?node-id=0-1&p=f&t=EC0DxPiX4YyB5Ioc-0
