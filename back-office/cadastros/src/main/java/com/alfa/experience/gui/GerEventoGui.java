@@ -17,7 +17,7 @@ import java.time.format.DateTimeParseException;
 
 public class GerEventoGui extends JFrame {
 
-    private EventoService eventoService;
+    private final EventoService eventoService;
 
     private JLabel jlId;
     private JTextField tfId;
@@ -47,19 +47,25 @@ public class GerEventoGui extends JFrame {
     private JButton btConfirmar;
     private JTable tbEventos;
 
-    public void GerEventos(EventoService eventoService){
+    public GerEventoGui(EventoService eventoService) {
         this.eventoService = eventoService;
+        mostrarTela();
+    }
+
+    private void mostrarTela() {
         var guiUtils = new GuiUtils();
-        guiUtils.montarTelaPadrao(this, "Gerenciamento de Eventos", 800, 600);
+        guiUtils.montarTelaPadrao(this, "Gerenciamento de Eventos - AlfaExperience", 800, 600);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        JLabel titulo = new JLabel("Gerenciamento de Eventos", SwingConstants.CENTER);
+        titulo.setFont(new Font("Arial", Font.BOLD, 16));
+        JPanel painelTitulo = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        painelTitulo.add(titulo);
+        add(painelTitulo, BorderLayout.NORTH);
+        add(montarCampos(), BorderLayout.CENTER);
+        add(montarTabelaDados(), BorderLayout.SOUTH);
+
         setVisible(true);
-
-        JLabel titulo = new JLabel("Gerenciamento de Eventos");
-        JPanel painelTitulo = new JPanel();
-        painelTitulo.add(titulo, BorderLayout.CENTER);
-
-        add(montarCampos(), BorderLayout.NORTH);
-        add(montarTabelaDados(), BorderLayout.CENTER);
     }
 
     private JPanel montarCampos() {
@@ -144,17 +150,17 @@ public class GerEventoGui extends JFrame {
         evento.setId(tfId.getText().isEmpty() ? null : Long.valueOf(tfId.getText()));
         evento.setNome(tfNome.getText());
         Timestamp inicio = obterTimestampValido(tfDtInicio);
-        evento.setDtInicio(String.valueOf(inicio));
+        evento.setDtInicio(Timestamp.valueOf(String.valueOf(inicio)));
         Timestamp fim = obterTimestampValido(tfDtFim);
-        evento.setDtFim(String.valueOf(fim));
+        evento.setDtFim(Timestamp.valueOf(String.valueOf(fim)));
         evento.setLocal(tfLocal.getText());
-        evento.setValorIncricao(tfValorIncricao.getText());
+        evento.setValorInscricao(tfValorIncricao.getText());
         evento.setPublicoAlvo(tfPublicoAlvo.getText());
         evento.setObjetivo(tfObjetivo.getText());
         evento.setBanner(tfBanner.getText());
         evento.setPalestrante(tfPalestrante.getText());
         evento.setEspecialidade(tfEspecialidade.getText());
-        evento.setVagasMax(tfVagasMaximas.getText());
+        evento.setVagasMaximas(Integer.valueOf(tfVagasMaximas.getText()));
 
         servico.salvar(evento);
         limparCampos();
@@ -177,44 +183,61 @@ public class GerEventoGui extends JFrame {
     }
 
     private JScrollPane montarTabelaDados(){
-        //var jPanel = new JPanel(new ScrollPaneLayout());
-
         tbEventos = new JTable();
-        tbEventos.setDefaultEditor(Object.class, null); // Não deixa a pessoa editar a tabela.
+        tbEventos.setDefaultEditor(Object.class, null);
         tbEventos.getSelectionModel().addListSelectionListener(this::selecionar);
         tbEventos.setModel(carregarEventos());
-
         return new JScrollPane(tbEventos);
     }
 
-    private static DefaultTableModel carregarEventos() {
+    private DefaultTableModel carregarEventos() {
         var tableModel = new DefaultTableModel();
+        tableModel.addColumn("ID");
         tableModel.addColumn("Nome");
         tableModel.addColumn("Dt_Inicio");
         tableModel.addColumn("Dt_Fim");
         tableModel.addColumn("Palestrante");
         tableModel.addColumn("Max Incrições");
-
-        var service = new EventoService();
-        service.listarTodos().forEach(a ->
-                tableModel.addRow(new Object[]{a.getNome(),a.getDtInicio(),a.getDtFim(),a.getPalestrante(),a.getVagasMax()})
-        );
+        try {
+            eventoService.listarTodos().forEach(a ->
+                    tableModel.addRow(new Object[]{a.getId(), a.getNome(), a.getDtInicio(), a.getDtFim(), a.getPalestrante(), a.getVagasMaximas()})
+            );
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao carregar eventos: " + e.getMessage());
+        }
         return tableModel;
     }
 
-    private void selecionar(ListSelectionEvent listSelectionEvent) {
-        var linha = tbEventos.getSelectedRow();
-
-        if (linha != 1){
-            var evento = EventoService.buscarPorId(
-                    (Long) tbEventos.getValueAt(linha,0));
-            tfNome.setText(evento.getNome());
-            //Colocar todos os campos
+    private void selecionar(ListSelectionEvent e) {
+        if (!e.getValueIsAdjusting()) {
+            int linha = tbEventos.getSelectedRow();
+            if (linha != -1) {
+                try {
+                    Long id = (Long) tbEventos.getValueAt(linha, 0);
+                    Evento evento = EventoService.buscarPorId(id);
+                    tfId.setText(String.valueOf(evento.getId()));
+                    tfNome.setText(evento.getNome());
+                    tfDtInicio.setText(formatarTimestamp(evento.getDtInicio()));
+                    tfDtFim.setText(formatarTimestamp(evento.getDtFim()));
+                    tfLocal.setText(evento.getLocal());
+                    tfValorIncricao.setText(evento.getValorInscricao());
+                    tfPublicoAlvo.setText(evento.getPublicoAlvo());
+                    tfObjetivo.setText(evento.getObjetivo());
+                    tfBanner.setText(evento.getBanner());
+                    tfPalestrante.setText(evento.getPalestrante());
+                    tfEspecialidade.setText(evento.getEspecialidade());
+                    tfVagasMaximas.setText(String.valueOf(evento.getVagasMaximas()));
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Erro ao carregar evento: " + ex.getMessage());
+                }
+            }
         }
+    }
 
-
-
-
+    private String formatarTimestamp(Timestamp timestamp) {
+        if (timestamp == null) return "";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        return timestamp.toLocalDateTime().format(formatter);
     }
 
     public static JFormattedTextField criarCampoData() {
