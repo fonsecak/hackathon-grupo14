@@ -34,7 +34,12 @@
         </div>
     </nav>
 
-    <?php include 'login-modal.php'; ?>
+     <?php
+    // Incluir o login apenas se **NÃO** estiver na página de cadastro
+    if (basename($_SERVER['PHP_SELF']) !== 'cadastro.php') {
+        include 'login-modal.php';
+    }
+    ?>
     
 </body>
-</html> <!-- Aqui está a tag de fechamento -->
+
