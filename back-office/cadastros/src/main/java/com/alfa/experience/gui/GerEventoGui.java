@@ -9,7 +9,6 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -17,7 +16,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Timestamp;
-import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -26,6 +24,7 @@ public class GerEventoGui extends JFrame {
 
     private final EventoService eventoService;
     private final PalestranteService palestranteService;
+    private final TelaPrincipal telaPrincipal;
 
     private JLabel jlId;
     private JTextField tfId;
@@ -63,13 +62,14 @@ public class GerEventoGui extends JFrame {
     private static final String[] PUBLICOS_ALVO = {"Todos","Administração", "Ciências Contábeis", "Direito", "Sistemas p/ Internet", "Pedagogia", "Psicologia"};
     private static final String BANNERS_DIR = "../../resources/img";  //Pasta onde é salva as imagens
 
-    public GerEventoGui(EventoService eventoService, PalestranteService palestranteService) {
+    public GerEventoGui(EventoService eventoService, PalestranteService palestranteService, TelaPrincipal telaPrincipal) {
         if (eventoService == null || palestranteService == null) {
             JOptionPane.showMessageDialog(null, "Erro: Serviços não inicializados.", "Erro", JOptionPane.ERROR_MESSAGE);
             throw new IllegalArgumentException("EventoService ou PalestranteService não podem ser nulos.");
         }
         this.eventoService = eventoService;
         this.palestranteService = palestranteService;
+        this.telaPrincipal = telaPrincipal;
         criarDiretorioBanners();
         mostrarTela();
     }
@@ -82,8 +82,10 @@ public class GerEventoGui extends JFrame {
     }
     private void mostrarTela() {
         var guiUtils = new GuiUtils();
-        guiUtils.montarTelaPadrao(this, "Gerenciamento de Eventos - AlfaExperience", 800, 600);
+        guiUtils.montarTelaPadrao(this, "Gerenciamento de Eventos - AlfaExperience", 900, 800);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        setJMenuBar(guiUtils.criarMenuBar(this, telaPrincipal));
 
         JLabel titulo = new JLabel("Gerenciamento de Eventos", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 16));
@@ -93,7 +95,7 @@ public class GerEventoGui extends JFrame {
         add(montarCampos(), BorderLayout.CENTER);
         add(montarTabelaDados(), BorderLayout.SOUTH);
 
-        // Carregar palestrantes após construir a interface
+        // Carregar palestrantes após construir a tela
         try {
             carregarPalestrantesComboBox();
         } catch (Exception e) {
@@ -107,44 +109,52 @@ public class GerEventoGui extends JFrame {
 
     private JPanel montarCampos() {
         var jPanel = new JPanel(new GridBagLayout());
+        jPanel.setBackground(GuiUtils.COR_FUNDO_TELA);
         var guiUtils = new GuiUtils();
 
         jlId = guiUtils.criarLabel("ID");
-        tfId = new JTextField(20);
+        tfId = guiUtils.criarTextField(20);
         tfId.setEditable(false);
+        tfId.setBackground(GuiUtils.COR_CAMPO_DESABILITADO);
         jlNome = guiUtils.criarLabel("Título");
-        tfNome = new JTextField(20);
+        tfNome = guiUtils.criarTextField(20);
         jlDtInicio = guiUtils.criarLabel("Data de Início");
-        tfDtInicio = criarCampoData();
+        tfDtInicio = guiUtils.criarCampoData();
         jlDtFim = guiUtils.criarLabel("Data Fim");
-        tfDtFim = criarCampoData();
+        tfDtFim = guiUtils.criarCampoData();
         jlLocal = guiUtils.criarLabel("Local");
-        tfLocal = new JTextField(20);
+        tfLocal = guiUtils.criarTextField(20);
         jlValorInscricao = guiUtils.criarLabel("Valor Inscrição");
-        tfValorInscricao = new JTextField(20);
+        tfValorInscricao = guiUtils.criarTextField(20);
         jlPublicoAlvo = guiUtils.criarLabel("Público Alvo");
         cbPublicoAlvo = new JComboBox<>(PUBLICOS_ALVO);
+        cbPublicoAlvo.setBackground(GuiUtils.COR_CAMPO_TEXTO);
+        cbPublicoAlvo.setForeground(GuiUtils.COR_TEXTO_LABEL);
         jlObjetivo = guiUtils.criarLabel("Objetivo");
-        tfObjetivo = new JTextField(20);
+        tfObjetivo = guiUtils.criarTextField(20);
         jlBanner = guiUtils.criarLabel("Banner");
-        tfBanner = new JTextField(20);
+        tfBanner = guiUtils.criarTextField(20);
         tfBanner.setEditable(false);
-        btSelecionarBanner = guiUtils.criarBotao("Selecionar");
+        tfBanner.setBackground(GuiUtils.COR_CAMPO_DESABILITADO);
+        btSelecionarBanner = guiUtils.criarBotao("Selecionar","primario");
         btSelecionarBanner.addActionListener(this::selecionarImagem);
         jlPalestrante = guiUtils.criarLabel("Palestrante");
         cbPalestrante = new JComboBox<>();
+        cbPalestrante.setFont(GuiUtils.FONTE_CAMPO);
+        cbPalestrante.setBackground(GuiUtils.COR_CAMPO_TEXTO);
+        cbPalestrante.setForeground(GuiUtils.COR_TEXTO_LABEL);
         jlVagasMaximas = guiUtils.criarLabel("Vagas Máximas");
-        tfVagasMaximas = new JTextField(20);
+        tfVagasMaximas = guiUtils.criarTextField(20);
         jlDescricao = guiUtils.criarLabel("Descrição"); // Inicializado
-        tfDescricao = new JTextField(20);
+        tfDescricao = guiUtils.criarTextField(20);
 
-        btConfirmar = guiUtils.criarBotao("Confirmar");
+        btConfirmar = guiUtils.criarBotao("Confirmar", "primario");
         btConfirmar.addActionListener(this::confirmar);
-        btExcluir = guiUtils.criarBotao("Excluir");
+        btExcluir = guiUtils.criarBotao("Excluir", "perigo");
         btExcluir.addActionListener(this::excluir);
-        btAtualizar = guiUtils.criarBotao("Atualizar");
+        btAtualizar = guiUtils.criarBotao("Atualizar", "primario");
         btAtualizar.addActionListener(this::atualizar);
-        btLimpar = guiUtils.criarBotao("Limpar");
+        btLimpar = guiUtils.criarBotao("Limpar","secundario");
         btLimpar.addActionListener(e -> limparCampos());
 
         try {
@@ -171,6 +181,8 @@ public class GerEventoGui extends JFrame {
             jPanel.add(cbPalestrante, guiUtils.montarConstraints(1, 5));
             jPanel.add(jlVagasMaximas, guiUtils.montarConstraints(2, 5));
             jPanel.add(tfVagasMaximas, guiUtils.montarConstraints(3, 5));
+            jPanel.add(jlObjetivo, guiUtils.montarConstraints(4,5));
+            jPanel.add(tfObjetivo, guiUtils.montarConstraints(5,5));
             jPanel.add(btConfirmar, guiUtils.montarConstraints(0, 6));
             jPanel.add(btExcluir, guiUtils.montarConstraints(1, 6));
             jPanel.add(btAtualizar, guiUtils.montarConstraints(2, 6));
@@ -231,29 +243,29 @@ public class GerEventoGui extends JFrame {
     private void salvarEvento() {
         var guiUtils = new GuiUtils();
 
-        if (tfNome.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "O nome do evento é obrigatório.");
+        if (!guiUtils.validarCamposObrigatorios(tfNome)) {
+            guiUtils.exibirMensagem(this, "O nome do evento é obrigatório.", "Erro", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         Timestamp inicio = obterTimestampValido(tfDtInicio);
         Timestamp fim = obterTimestampValido(tfDtFim);
-        
+
         if (inicio == null || fim == null) {
-            JOptionPane.showMessageDialog(this, "Datas inválidas.");
+            guiUtils.exibirMensagem(this, "Datas inválidas.", "Erro", JOptionPane.ERROR_MESSAGE);
             return;
         }
         Integer vagasMaximas = null;
         try {
             if (!tfVagasMaximas.getText().isEmpty()) {
-                vagasMaximas = Integer.valueOf(tfVagasMaximas.getText());
+                vagasMaximas = Integer.valueOf(tfVagasMaximas.getText().trim());
                 if (vagasMaximas <= 0) {
-                    JOptionPane.showMessageDialog(this, "Vagas máximas deve ser maior que zero.");
+                    guiUtils.exibirMensagem(this, "Vagas máximas deve ser maior que zero.", "Erro", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
             }
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Vagas máximas deve ser um número válido.");
+            guiUtils.exibirMensagem(this, "Vagas máximas deve ser um número válido.", "Erro", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -281,7 +293,7 @@ public class GerEventoGui extends JFrame {
             evento.setValorInscricao(tfValorInscricao.getText().trim());
             evento.setPublicoAlvo((String) cbPublicoAlvo.getSelectedItem());
             evento.setObjetivo(tfObjetivo.getText().trim());
-            evento.setBanner(tfBanner.getText().trim());
+            evento.setBanner(bannerName.isEmpty() ? null : bannerName);
             Palestrante palestrante = (Palestrante) cbPalestrante.getSelectedItem();
             evento.setIdPalestrantes(palestrante != null ? palestrante.getId() : null);
             evento.setVagasMaximas(vagasMaximas);
@@ -350,6 +362,8 @@ public class GerEventoGui extends JFrame {
 
     private JScrollPane montarTabelaDados(){
         tbEventos = new JTable();
+        tbEventos.setFont(GuiUtils.FONTE_CAMPO);
+        tbEventos.setRowHeight(24);
         tbEventos.setDefaultEditor(Object.class, null);
         tbEventos.getSelectionModel().addListSelectionListener(this::selecionar);
         tbEventos.setModel(carregarEventos());
@@ -357,6 +371,7 @@ public class GerEventoGui extends JFrame {
     }
 
     private DefaultTableModel carregarEventos() {
+        var guiUtils = new GuiUtils();
         var tableModel = new DefaultTableModel();
         tableModel.addColumn("ID");
         tableModel.addColumn("Nome");
@@ -374,7 +389,7 @@ public class GerEventoGui extends JFrame {
                 tableModel.addRow(new Object[]{e.getId(), e.getNome(), formatarTimestamp(e.getDtInicio()), formatarTimestamp(e.getDtFim()), palestranteNome, e.getVagasMaximas()});
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Erro ao carregar eventos: " + e.getMessage());
+            guiUtils.exibirMensagem(this, "Erro ao carregar eventos: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
         return tableModel;
     }
@@ -427,20 +442,6 @@ public class GerEventoGui extends JFrame {
         if (timestamp == null) return "";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         return timestamp.toLocalDateTime().format(formatter);
-    }
-
-    public static JFormattedTextField criarCampoData() {
-        // Esse método serve para criar um campo formatado para o usuário digitar a data e a hora.
-        // Eu uso o MaskFormatter para definir o formato "dd/MM/yyyy HH:mm", que obriga a digitação correta.
-        try {
-            MaskFormatter dataFormatter = new MaskFormatter("##/##/#### ##:##");
-            dataFormatter.setPlaceholderCharacter('_');
-            JFormattedTextField campo = new JFormattedTextField(dataFormatter);
-            return campo;
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return new JFormattedTextField();
-        }
     }
 
     public static Timestamp obterTimestampValido(JFormattedTextField campo) {
