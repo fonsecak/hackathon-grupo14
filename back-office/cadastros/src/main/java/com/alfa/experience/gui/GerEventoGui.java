@@ -32,7 +32,7 @@ public class GerEventoGui extends JFrame {
     private JLabel jlValorIncricao;
     private JTextField tfValorIncricao;
     private JLabel jlPublicoAlvo;
-    private JTextField tfPublicoAlvo;
+    private JComboBox<String> cbPublicoAlvo;
     private JLabel jlObjetivo;
     private JTextField tfObjetivo;
     private JLabel jlBanner;
@@ -45,7 +45,12 @@ public class GerEventoGui extends JFrame {
     private JTextField tfVagasMaximas;
 
     private JButton btConfirmar;
+    private JButton btExcluir;
+    private JButton btAtualizar;
+    private JButton btLimpar;
     private JTable tbEventos;
+
+    private static final String[] PUBLICOS_ALVO = {"Todos","Administração", "Ciências Contábeis", "Direito", "Sistemas p/ Internet", "Pedagogia", "Psicologia"};
 
     public GerEventoGui(EventoService eventoService) {
         this.eventoService = eventoService;
@@ -85,8 +90,8 @@ public class GerEventoGui extends JFrame {
         tfLocal = new JTextField(20);
         jlValorIncricao = new JLabel("Valor Incrição");
         tfValorIncricao = new JTextField(20);
-        jlPublicoAlvo = new JLabel("Publico Alvo");
-        tfPublicoAlvo = new JTextField(20);
+        jlPublicoAlvo = guiUtils.criarLabel("Público Alvo");
+        cbPublicoAlvo = new JComboBox<>(PUBLICOS_ALVO);
         jlObjetivo = new JLabel("Objetivo");
         tfObjetivo = new JTextField(20);
         jlBanner = new JLabel("Banner");
@@ -98,8 +103,14 @@ public class GerEventoGui extends JFrame {
         jlVagasMaximas = new JLabel("Vagas Maximas");
         tfVagasMaximas = new JTextField(20);
 
-        btConfirmar = new JButton("Confirmar");
+        btConfirmar = guiUtils.criarBotao("Confirmar");
         btConfirmar.addActionListener(this::confirmar);
+        btExcluir = guiUtils.criarBotao("Excluir");
+        btExcluir.addActionListener(this::excluir);
+        btAtualizar = guiUtils.criarBotao("Atualizar");
+        btAtualizar.addActionListener(this::atualizar);
+        btLimpar = guiUtils.criarBotao("Limpar");
+        btLimpar.addActionListener(e -> limparCampos());
 
         jPanel.add(jlId, guiUtils.montarConstraints(0, 0));
         jPanel.add(tfId, guiUtils.montarConstraints(1, 0));
@@ -120,7 +131,7 @@ public class GerEventoGui extends JFrame {
         jPanel.add(tfValorIncricao, guiUtils.montarConstraints(3, 2));
 
         jPanel.add(jlPublicoAlvo, guiUtils.montarConstraints(0, 3));
-        jPanel.add(tfPublicoAlvo, guiUtils.montarConstraints(1, 3));
+        jPanel.add(cbPublicoAlvo, guiUtils.montarConstraints(1, 3));
 
         jPanel.add(jlObjetivo, guiUtils.montarConstraints(2, 3));
         jPanel.add(tfObjetivo, guiUtils.montarConstraints(3, 3));
@@ -137,33 +148,101 @@ public class GerEventoGui extends JFrame {
         jPanel.add(jlVagasMaximas, guiUtils.montarConstraints(2, 5));
         jPanel.add(tfVagasMaximas, guiUtils.montarConstraints(3, 5));
 
-        jPanel.add(btConfirmar, guiUtils.montarConstraints(1,6));
+        jPanel.add(btConfirmar, guiUtils.montarConstraints(0, 6));
+        jPanel.add(btExcluir, guiUtils.montarConstraints(1, 6));
+        jPanel.add(btAtualizar, guiUtils.montarConstraints(2, 6));
+        jPanel.add(btLimpar, guiUtils.montarConstraints(3, 6));
 
         return jPanel;
     }
 
-    private void confirmar(ActionEvent event) {
+    private void confirmar(ActionEvent e) {
+        salvarEvento();
+    }
 
-        var servico = new EventoService();
-        var evento = new Evento();
+    private void salvarEvento() {
+        var guiUtils = new GuiUtils();
 
-        evento.setId(tfId.getText().isEmpty() ? null : Long.valueOf(tfId.getText()));
-        evento.setNome(tfNome.getText());
+        if (tfNome.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "O nome do evento é obrigatório.");
+            return;
+        }
+
         Timestamp inicio = obterTimestampValido(tfDtInicio);
-        evento.setDtInicio(Timestamp.valueOf(String.valueOf(inicio)));
         Timestamp fim = obterTimestampValido(tfDtFim);
-        evento.setDtFim(Timestamp.valueOf(String.valueOf(fim)));
-        evento.setLocal(tfLocal.getText());
-        evento.setValorInscricao(tfValorIncricao.getText());
-        evento.setPublicoAlvo(tfPublicoAlvo.getText());
-        evento.setObjetivo(tfObjetivo.getText());
-        evento.setBanner(tfBanner.getText());
-        evento.setPalestrante(tfPalestrante.getText());
-        evento.setEspecialidade(tfEspecialidade.getText());
-        evento.setVagasMaximas(Integer.valueOf(tfVagasMaximas.getText()));
+        if (inicio == null || fim == null) {
+            JOptionPane.showMessageDialog(this, "Datas inválidas.");
+            return;
+        }
+        Integer vagasMaximas = null;
+        try {
+            if (!tfVagasMaximas.getText().isEmpty()) {
+                vagasMaximas = Integer.valueOf(tfVagasMaximas.getText());
+                if (vagasMaximas <= 0) {
+                    JOptionPane.showMessageDialog(this, "Vagas máximas deve ser maior que zero.");
+                    return;
+                }
+            }
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Vagas máximas deve ser um número válido.");
+            return;
+        }
 
-        servico.salvar(evento);
-        limparCampos();
+        var evento = new Evento();
+        try {
+            evento.setId(tfId.getText().isEmpty() ? null : Long.parseLong(tfId.getText()));
+            evento.setNome(tfNome.getText().trim());
+            evento.setDtInicio(inicio);
+            evento.setDtFim(fim);
+            evento.setLocal(tfLocal.getText().trim());
+            evento.setValorInscricao(tfValorIncricao.getText());
+            evento.setPublicoAlvo((String) cbPublicoAlvo.getSelectedItem());
+            evento.setObjetivo(tfObjetivo.getText().trim());
+            evento.setBanner(tfBanner.getText().trim());
+            evento.setPalestrante(tfPalestrante.getText().trim());
+            evento.setEspecialidade(tfEspecialidade.getText().trim());
+            evento.setVagasMaximas(vagasMaximas);
+        } catch (IllegalArgumentException ex) {
+            guiUtils.exibirMensagem(this, ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        try {
+            eventoService.salvar(evento);
+            guiUtils.exibirMensagem(this, "Evento salvo com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            limparCampos();
+            tbEventos.setModel(carregarEventos());
+        } catch (Exception e) {
+            guiUtils.exibirMensagem(this, "Erro ao salvar evento: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void atualizar(ActionEvent e) {
+        if (tfId.getText().isEmpty()) {
+            GuiUtils.exibirMensagem(this, "Selecione um evento para atualizar.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        salvarEvento();
+    }
+
+    private void excluir(ActionEvent e) {
+        int row = tbEventos.getSelectedRow();
+        if (row != -1) {
+            Long pk = (Long) tbEventos.getValueAt(row, 0);
+            int confirm = JOptionPane.showConfirmDialog(this, "Deseja excluir este evento?", "Confirmação", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                try {
+                    eventoService.excluir(pk);
+                    GuiUtils.exibirMensagem(this, "Evento excluído com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                    limparCampos();
+                    tbEventos.setModel(carregarEventos());
+                } catch (Exception ex) {
+                    GuiUtils.exibirMensagem(this, "Erro ao excluir evento: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        } else {
+            GuiUtils.exibirMensagem(this, "Selecione um evento para excluir.", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void limparCampos() {
@@ -173,10 +252,9 @@ public class GerEventoGui extends JFrame {
         tfDtFim.setText(null);
         tfLocal.setText(null);
         tfValorIncricao.setText(null);
-        tfPublicoAlvo.setText(null);
+        cbPublicoAlvo.setSelectedIndex(0);
         tfObjetivo.setText(null);
         tfBanner.setText(null);
-        tfId.setText(null);
         tfPalestrante.setText(null);
         tfEspecialidade.setText(null);
         tfVagasMaximas.setText(null);
@@ -221,7 +299,7 @@ public class GerEventoGui extends JFrame {
                     tfDtFim.setText(formatarTimestamp(evento.getDtFim()));
                     tfLocal.setText(evento.getLocal());
                     tfValorIncricao.setText(evento.getValorInscricao());
-                    tfPublicoAlvo.setText(evento.getPublicoAlvo());
+                    cbPublicoAlvo.setSelectedItem(evento.getPublicoAlvo() != null ? evento.getPublicoAlvo() : PUBLICOS_ALVO[0]);
                     tfObjetivo.setText(evento.getObjetivo());
                     tfBanner.setText(evento.getBanner());
                     tfPalestrante.setText(evento.getPalestrante());

@@ -1,5 +1,6 @@
 package com.alfa.experience;
 
+import com.alfa.experience.dao.EventoDao;
 import com.alfa.experience.gui.TelaPrincipal;
 import com.alfa.experience.service.EventoService;
 
@@ -11,7 +12,7 @@ public class Main {
     }
 
     private static void iniciar() {
-        var telaPrincipal = new TelaPrincipal(new EventoService());
+        var telaPrincipal = new TelaPrincipal(new EventoService(new EventoDao()));
         telaPrincipal.setVisible(true);
     }
 }
