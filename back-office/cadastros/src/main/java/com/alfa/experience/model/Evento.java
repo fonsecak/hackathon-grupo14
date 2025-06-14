@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 public class Evento {
     private Long id;
     private String nome;
+    private String descricao;
     private Timestamp dtInicio;
     private Timestamp dtFim;
     private String local;
@@ -12,18 +13,16 @@ public class Evento {
     private String publicoAlvo;
     private String objetivo;
     private String banner;
-    private String palestrante;
-    private String especialidade;
     private Integer vagasMaximas;
+    private Long idPalestrantes;
 
     public Evento() {
     }
 
-    public Evento(Long id, String nome, Timestamp dtInicio, Timestamp dtFim, String local,
-                  String valorInscricao, String publicoAlvo, String objetivo, String banner,
-                  String palestrante, String especialidade, Integer vagasMaximas) {
+    public Evento(Long id, String nome, String descricao, Timestamp dtInicio, Timestamp dtFim, String local, String valorInscricao, String publicoAlvo, String objetivo, String banner, Integer vagasMaximas, Long idPalestrantes) {
         this.id = id;
         this.nome = nome;
+        this.descricao = descricao;
         this.dtInicio = dtInicio;
         this.dtFim = dtFim;
         this.local = local;
@@ -31,9 +30,16 @@ public class Evento {
         this.publicoAlvo = publicoAlvo;
         this.objetivo = objetivo;
         this.banner = banner;
-        this.palestrante = palestrante;
-        this.especialidade = especialidade;
         this.vagasMaximas = vagasMaximas;
+        this.idPalestrantes = idPalestrantes;
+    }
+
+    public String getObjetivo() {
+        return objetivo;
+    }
+
+    public void setObjetivo(String objetivo) {
+        this.objetivo = objetivo;
     }
 
     public Long getId() {
@@ -50,6 +56,14 @@ public class Evento {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 
     public Timestamp getDtInicio() {
@@ -92,14 +106,6 @@ public class Evento {
         this.publicoAlvo = publicoAlvo;
     }
 
-    public String getObjetivo() {
-        return objetivo;
-    }
-
-    public void setObjetivo(String objetivo) {
-        this.objetivo = objetivo;
-    }
-
     public String getBanner() {
         return banner;
     }
@@ -108,27 +114,19 @@ public class Evento {
         this.banner = banner;
     }
 
-    public String getPalestrante() {
-        return palestrante;
-    }
-
-    public void setPalestrante(String palestrante) {
-        this.palestrante = palestrante;
-    }
-
-    public String getEspecialidade() {
-        return especialidade;
-    }
-
-    public void setEspecialidade(String especialidade) {
-        this.especialidade = especialidade;
-    }
-
     public Integer getVagasMaximas() {
         return vagasMaximas;
     }
 
     public void setVagasMaximas(Integer vagasMaximas) {
         this.vagasMaximas = vagasMaximas;
+    }
+
+    public Long getIdPalestrantes() {
+        return idPalestrantes;
+    }
+
+    public void setIdPalestrantes(Long idPalestrantes) {
+        this.idPalestrantes = idPalestrantes;
     }
 }
