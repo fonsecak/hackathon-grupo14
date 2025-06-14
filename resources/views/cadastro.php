@@ -38,6 +38,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -52,6 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
 </head>
 <body>
+  <body class="cadastro-page">
     <?php if (isset($sucesso) && $sucesso): ?>
   <div class="alert alert-success">Cadastro realizado com sucesso!</div>
 <?php elseif (isset($erro)): ?>

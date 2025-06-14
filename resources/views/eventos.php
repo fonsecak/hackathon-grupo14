@@ -12,7 +12,7 @@ $destaques     = json_decode($destaquesJson, true);
 
   <!-- Seção: Eventos em destaque -->
   <div class="container py-5">
-    <h2 class="mb-4 text-left">Eventos em destaque</h2>
+    <h2 class="mb-4 text-left">Eventos em destaque.</h2>
     <div><br></div>
       <div class="row justify-content-center">
           <?php foreach ($destaques as $evento): ?>
@@ -30,7 +30,7 @@ $destaques     = json_decode($destaquesJson, true);
                 <p class="price">
                 <?php echo ($evento['valor_inscricao'] == 0) ? 'Gratuito' : 'R$ ' . number_format($evento['valor_inscricao'], 2, ',', '.'); ?>
                 </p>
-                <a href="#" class="btn w-100">Inscreva-se</a>
+                <a href="#" class="btn w-100">Detalhes</a>
               </div>
             </div>
           </div>
@@ -97,6 +97,8 @@ $destaques     = json_decode($destaquesJson, true);
 
     <div class="container">
   <div class="row justify-content-center">
+    <h2 class="mb-0">Todos os eventos.</h2>
+    <br><br><br><br><br>
     <?php foreach ($eventos as $evento): ?>
       <div class="col-6 col-md-3 mb-4">
         <div class="card event-card shadow-sm">
@@ -112,7 +114,7 @@ $destaques     = json_decode($destaquesJson, true);
             <p class="price">
               <?= $evento['valor_inscricao'] == 0 ? 'Gratuito' : 'R$ ' . number_format($evento['valor_inscricao'], 2, ',', '.') ?>
             </p>
-            <a href="#" class="btn w-100">Inscreva-se</a>
+            <a href="#" class="btn w-100">Detalhes</a>
           </div>
         </div>
       </div>
