@@ -2,7 +2,6 @@ package com.alfa.experience.dao;
 
 import com.alfa.experience.model.Evento;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,12 +34,40 @@ public class EventoDao extends Dao implements DaoInterface {
 
     @Override
     public boolean update(Object entity) {
-        return false;
+        try {
+            var evento = (Evento) entity;
+            var updateSql = "UPDATE eventos SET nome=?, data_hora_inicio=?, data_hora_fim=?, local=?, valor_inscricao=?, publico_alvo=?, objetivo=?, banner=?, palestrante=?, especialidade=?, vagas_maxima=? WHERE id=?";
+            var ps = getConnection().prepareStatement(updateSql);
+            ps.setString(1, evento.getNome());
+            ps.setTimestamp(2, evento.getDtInicio());
+            ps.setTimestamp(3, evento.getDtFim());
+            ps.setString(4, evento.getLocal());
+            ps.setString(5, evento.getValorInscricao());
+            ps.setString(6, evento.getPublicoAlvo());
+            ps.setString(7, evento.getObjetivo());
+            ps.setString(8, evento.getBanner());
+            ps.setString(9, evento.getPalestrante());
+            ps.setString(10, evento.getEspecialidade());
+            ps.setInt(11, evento.getVagasMaximas());
+            ps.setLong(12, evento.getId());
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
     }
 
     @Override
     public boolean delete(Long pk) {
-        return false;
+        try {
+            var deleteSql = "DELETE FROM eventos WHERE id=?";
+            var ps = getConnection().prepareStatement(deleteSql);
+            ps.setLong(1, pk);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
     }
 
     @Override
