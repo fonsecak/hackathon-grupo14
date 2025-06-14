@@ -5,10 +5,15 @@ import com.alfa.experience.service.EventoService;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.time.LocalDateTime;
@@ -44,19 +49,30 @@ public class GerEventoGui extends JFrame {
     private JLabel jlVagasMaximas;
     private JTextField tfVagasMaximas;
 
+    private JButton btSelecionarBanner;
     private JButton btConfirmar;
     private JButton btExcluir;
     private JButton btAtualizar;
     private JButton btLimpar;
     private JTable tbEventos;
 
+    private File imagemSelecionada; // Armazena o arquivo temporariamente
+
     private static final String[] PUBLICOS_ALVO = {"Todos","Administração", "Ciências Contábeis", "Direito", "Sistemas p/ Internet", "Pedagogia", "Psicologia"};
+    private static final String BANNERS_DIR = "../../resources/img";  //Pasta onde é salva as imagens
 
     public GerEventoGui(EventoService eventoService) {
         this.eventoService = eventoService;
+        criarDiretorioBanners();
         mostrarTela();
     }
 
+    private void criarDiretorioBanners() {
+        File dir = new File(BANNERS_DIR);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+    }
     private void mostrarTela() {
         var guiUtils = new GuiUtils();
         guiUtils.montarTelaPadrao(this, "Gerenciamento de Eventos - AlfaExperience", 800, 600);
@@ -96,6 +112,9 @@ public class GerEventoGui extends JFrame {
         tfObjetivo = new JTextField(20);
         jlBanner = new JLabel("Banner");
         tfBanner = new JTextField(20);
+        tfBanner.setEditable(false); // Não editável
+        btSelecionarBanner = guiUtils.criarBotao("Selecionar");
+        btSelecionarBanner.addActionListener(this::selecionarImagem);
         jlPalestrante = new JLabel("Palestrante");
         tfPalestrante = new JTextField(20);
         jlEspecialidade = new JLabel("Especialidade");
@@ -139,6 +158,8 @@ public class GerEventoGui extends JFrame {
         jPanel.add(jlBanner, guiUtils.montarConstraints(0, 4));
         jPanel.add(tfBanner, guiUtils.montarConstraints(1, 4));
 
+        jPanel.add(btSelecionarBanner, guiUtils.montarConstraints(2, 4));
+
         jPanel.add(jlPalestrante, guiUtils.montarConstraints(2, 4));
         jPanel.add(tfPalestrante, guiUtils.montarConstraints(3, 4));
 
@@ -156,6 +177,21 @@ public class GerEventoGui extends JFrame {
         return jPanel;
     }
 
+    private void selecionarImagem(ActionEvent e) {
+        var guiUtils = new GuiUtils();
+        JFileChooser chooser = new JFileChooser();
+        chooser.setFileFilter(new FileNameExtensionFilter("Imagens", "jpg", "jpeg", "png"));
+        int result = chooser.showOpenDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            imagemSelecionada = chooser.getSelectedFile();
+            // Gerar nome previsto
+            String extension = imagemSelecionada.getName().substring(imagemSelecionada.getName().lastIndexOf("."));
+            String newFileName = "banner_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmm_ss")) + extension;
+            tfBanner.setText(newFileName); // Apenas atualiza o campo
+            guiUtils.exibirMensagem(this, "Imagem selecionada! Será salva ao confirmar o evento.", "Info", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
     private void confirmar(ActionEvent e) {
         salvarEvento();
     }
@@ -170,6 +206,7 @@ public class GerEventoGui extends JFrame {
 
         Timestamp inicio = obterTimestampValido(tfDtInicio);
         Timestamp fim = obterTimestampValido(tfDtFim);
+        
         if (inicio == null || fim == null) {
             JOptionPane.showMessageDialog(this, "Datas inválidas.");
             return;
@@ -188,10 +225,23 @@ public class GerEventoGui extends JFrame {
             return;
         }
 
+        // Copiar imagem, se selecionada
+        String bannerName = tfBanner.getText().trim();
+        if (imagemSelecionada != null && !bannerName.isEmpty()) {
+            try {
+                Path destPath = Paths.get(BANNERS_DIR, bannerName);
+                Files.copy(imagemSelecionada.toPath(), destPath);
+                imagemSelecionada = null; // Limpar após copiar
+            } catch (Exception ex) {
+                guiUtils.exibirMensagem(this, "Erro ao salvar imagem: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+
         var evento = new Evento();
         try {
             evento.setId(tfId.getText().isEmpty() ? null : Long.parseLong(tfId.getText()));
-            evento.setNome(tfNome.getText().trim());
+            evento.setNome(tfNome.getText().trim()); //trim() remove espaços em branco no começo e no final da string
             evento.setDtInicio(inicio);
             evento.setDtFim(fim);
             evento.setLocal(tfLocal.getText().trim());
@@ -232,7 +282,10 @@ public class GerEventoGui extends JFrame {
             int confirm = JOptionPane.showConfirmDialog(this, "Deseja excluir este evento?", "Confirmação", JOptionPane.YES_NO_OPTION);
             if (confirm == JOptionPane.YES_OPTION) {
                 try {
-                    eventoService.excluir(pk);
+                    Evento evento = eventoService.buscarPorId(pk);
+                    if (evento.getBanner() != null) {
+                        Files.deleteIfExists(Paths.get(BANNERS_DIR, evento.getBanner()));
+                    }
                     GuiUtils.exibirMensagem(this, "Evento excluído com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                     limparCampos();
                     tbEventos.setModel(carregarEventos());
@@ -258,6 +311,7 @@ public class GerEventoGui extends JFrame {
         tfPalestrante.setText(null);
         tfEspecialidade.setText(null);
         tfVagasMaximas.setText(null);
+        imagemSelecionada = null;
     }
 
     private JScrollPane montarTabelaDados(){
@@ -305,6 +359,7 @@ public class GerEventoGui extends JFrame {
                     tfPalestrante.setText(evento.getPalestrante());
                     tfEspecialidade.setText(evento.getEspecialidade());
                     tfVagasMaximas.setText(String.valueOf(evento.getVagasMaximas()));
+                    imagemSelecionada = null;
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(this, "Erro ao carregar evento: " + ex.getMessage());
                 }
