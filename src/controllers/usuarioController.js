@@ -81,7 +81,7 @@ return res.status(400).json({ erro: 'CPF inválido. Use apenas números.' });
     });
 
     
-    return res.redirect('/');
+    res.status(201).json({ mensagem: 'Usuário cadastrado com sucesso.' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ erro: 'Erro ao cadastrar usuário.' });

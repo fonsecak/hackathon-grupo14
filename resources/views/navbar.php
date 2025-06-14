@@ -19,7 +19,7 @@ if (session_status() === PHP_SESSION_NONE) {
                         <a class="nav-link active" href="#"><i class="fas fa-home me-1"></i> Início</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fas fa-certificate me-1"></i> Certificado</a>
+                        <a class="nav-link active" href="certificado.php"><i class="fas fa-certificate me-1"></i> Certificado</a>
                     </li>
                 </ul>
                 <form class="d-flex search-form">
@@ -37,7 +37,7 @@ if (session_status() === PHP_SESSION_NONE) {
                     <!-- Link para Cadastro -->
                     <ul class="navbar-nav me-0 mb-2 mb-lg-0">
                         <li class="nav-item ms-3">
-                            <a class="nav-link" href="cadastro.php"><i class="fas fa-user-plus me-1"></i> Cadastrar</a>
+                            <a class="nav-link active" href="cadastro.php"><i class="fas fa-user-plus me-1"></i> Cadastrar</a>
                         </li>
                     </ul>
                 <?php else: ?>
