@@ -87,7 +87,42 @@ return res.status(400).json({ erro: 'CPF inválido. Use apenas números.' });
     res.status(500).json({ erro: 'Erro ao cadastrar usuário.' });
   }
 }
+async function loginUsuario(req, res) {
+  const { email, senha } = req.body;
+
+  if (!email || !senha) {
+    return res.status(400).json({ erro: 'E-mail e senha são obrigatórios.' });
+  }
+
+  try {
+    const usuario = await knex('participantes').where({ email }).first();
+
+    if (!usuario) {
+      return res.status(401).json({ erro: 'E-mail não cadastrado.' });
+    }
+
+    const senhaCorreta = await bcrypt.compare(senha, usuario.senha);
+
+    if (!senhaCorreta) {
+      return res.status(401).json({ erro: 'Senha incorreta.' });
+    }
+
+    return res.status(200).json({
+      mensagem: 'Login realizado com sucesso.',
+      usuario: {
+        id: usuario.id,
+        nome: usuario.nome,
+        email: usuario.email
+        // Aqui você pode incluir mais dados, ou gerar um token (JWT)
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ erro: 'Erro ao fazer login.' });
+  }
+}
 
 module.exports = {
   cadastrarUsuario,
+  loginUsuario
 };
