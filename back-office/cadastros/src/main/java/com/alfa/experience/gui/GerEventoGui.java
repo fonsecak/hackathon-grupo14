@@ -1,7 +1,9 @@
 package com.alfa.experience.gui;
 
 import com.alfa.experience.model.Evento;
+import com.alfa.experience.model.Palestrante;
 import com.alfa.experience.service.EventoService;
+import com.alfa.experience.service.PalestranteService;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -23,6 +25,7 @@ import java.time.format.DateTimeParseException;
 public class GerEventoGui extends JFrame {
 
     private final EventoService eventoService;
+    private final PalestranteService palestranteService;
 
     private JLabel jlId;
     private JTextField tfId;
@@ -34,8 +37,8 @@ public class GerEventoGui extends JFrame {
     private JFormattedTextField tfDtFim;
     private JLabel jlLocal;
     private JTextField tfLocal;
-    private JLabel jlValorIncricao;
-    private JTextField tfValorIncricao;
+    private JLabel jlValorInscricao;
+    private JTextField tfValorInscricao;
     private JLabel jlPublicoAlvo;
     private JComboBox<String> cbPublicoAlvo;
     private JLabel jlObjetivo;
@@ -43,12 +46,11 @@ public class GerEventoGui extends JFrame {
     private JLabel jlBanner;
     private JTextField tfBanner;
     private JLabel jlPalestrante;
-    private JTextField tfPalestrante;
-    private JLabel jlEspecialidade;
-    private JTextField tfEspecialidade;
+    private JComboBox<Palestrante> cbPalestrante;
     private JLabel jlVagasMaximas;
     private JTextField tfVagasMaximas;
-
+    private JLabel jlDescricao;
+    private JTextField tfDescricao;
     private JButton btSelecionarBanner;
     private JButton btConfirmar;
     private JButton btExcluir;
@@ -61,8 +63,13 @@ public class GerEventoGui extends JFrame {
     private static final String[] PUBLICOS_ALVO = {"Todos","Administração", "Ciências Contábeis", "Direito", "Sistemas p/ Internet", "Pedagogia", "Psicologia"};
     private static final String BANNERS_DIR = "../../resources/img";  //Pasta onde é salva as imagens
 
-    public GerEventoGui(EventoService eventoService) {
+    public GerEventoGui(EventoService eventoService, PalestranteService palestranteService) {
+        if (eventoService == null || palestranteService == null) {
+            JOptionPane.showMessageDialog(null, "Erro: Serviços não inicializados.", "Erro", JOptionPane.ERROR_MESSAGE);
+            throw new IllegalArgumentException("EventoService ou PalestranteService não podem ser nulos.");
+        }
         this.eventoService = eventoService;
+        this.palestranteService = palestranteService;
         criarDiretorioBanners();
         mostrarTela();
     }
@@ -86,6 +93,15 @@ public class GerEventoGui extends JFrame {
         add(montarCampos(), BorderLayout.CENTER);
         add(montarTabelaDados(), BorderLayout.SOUTH);
 
+        // Carregar palestrantes após construir a interface
+        try {
+            carregarPalestrantesComboBox();
+        } catch (Exception e) {
+            var guiUtils2 = new GuiUtils();
+            guiUtils2.exibirMensagem(this, "Erro ao carregar palestrantes: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+
+
         setVisible(true);
     }
 
@@ -93,34 +109,34 @@ public class GerEventoGui extends JFrame {
         var jPanel = new JPanel(new GridBagLayout());
         var guiUtils = new GuiUtils();
 
-        jlId = new JLabel("ID");
+        jlId = guiUtils.criarLabel("ID");
         tfId = new JTextField(20);
         tfId.setEditable(false);
-        jlNome = new JLabel("Titulo");
+        jlNome = guiUtils.criarLabel("Título");
         tfNome = new JTextField(20);
-        jlDtInicio = new JLabel("Data de inicio");
+        jlDtInicio = guiUtils.criarLabel("Data de Início");
         tfDtInicio = criarCampoData();
-        jlDtFim = new JLabel("Data Fim");
+        jlDtFim = guiUtils.criarLabel("Data Fim");
         tfDtFim = criarCampoData();
-        jlLocal = new JLabel("Local");
+        jlLocal = guiUtils.criarLabel("Local");
         tfLocal = new JTextField(20);
-        jlValorIncricao = new JLabel("Valor Incrição");
-        tfValorIncricao = new JTextField(20);
+        jlValorInscricao = guiUtils.criarLabel("Valor Inscrição");
+        tfValorInscricao = new JTextField(20);
         jlPublicoAlvo = guiUtils.criarLabel("Público Alvo");
         cbPublicoAlvo = new JComboBox<>(PUBLICOS_ALVO);
-        jlObjetivo = new JLabel("Objetivo");
+        jlObjetivo = guiUtils.criarLabel("Objetivo");
         tfObjetivo = new JTextField(20);
-        jlBanner = new JLabel("Banner");
+        jlBanner = guiUtils.criarLabel("Banner");
         tfBanner = new JTextField(20);
-        tfBanner.setEditable(false); // Não editável
+        tfBanner.setEditable(false);
         btSelecionarBanner = guiUtils.criarBotao("Selecionar");
         btSelecionarBanner.addActionListener(this::selecionarImagem);
-        jlPalestrante = new JLabel("Palestrante");
-        tfPalestrante = new JTextField(20);
-        jlEspecialidade = new JLabel("Especialidade");
-        tfEspecialidade = new JTextField(20);
-        jlVagasMaximas = new JLabel("Vagas Maximas");
+        jlPalestrante = guiUtils.criarLabel("Palestrante");
+        cbPalestrante = new JComboBox<>();
+        jlVagasMaximas = guiUtils.criarLabel("Vagas Máximas");
         tfVagasMaximas = new JTextField(20);
+        jlDescricao = guiUtils.criarLabel("Descrição"); // Inicializado
+        tfDescricao = new JTextField(20);
 
         btConfirmar = guiUtils.criarBotao("Confirmar");
         btConfirmar.addActionListener(this::confirmar);
@@ -131,50 +147,66 @@ public class GerEventoGui extends JFrame {
         btLimpar = guiUtils.criarBotao("Limpar");
         btLimpar.addActionListener(e -> limparCampos());
 
-        jPanel.add(jlId, guiUtils.montarConstraints(0, 0));
-        jPanel.add(tfId, guiUtils.montarConstraints(1, 0));
+        try {
+            jPanel.add(jlId, guiUtils.montarConstraints(0, 0));
+            jPanel.add(tfId, guiUtils.montarConstraints(1, 0));
+            jPanel.add(jlNome, guiUtils.montarConstraints(2, 0));
+            jPanel.add(tfNome, guiUtils.montarConstraints(3, 0));
+            jPanel.add(jlDtInicio, guiUtils.montarConstraints(0, 1));
+            jPanel.add(tfDtInicio, guiUtils.montarConstraints(1, 1));
+            jPanel.add(jlDtFim, guiUtils.montarConstraints(2, 1));
+            jPanel.add(tfDtFim, guiUtils.montarConstraints(3, 1));
+            jPanel.add(jlLocal, guiUtils.montarConstraints(0, 2));
+            jPanel.add(tfLocal, guiUtils.montarConstraints(1, 2));
+            jPanel.add(jlValorInscricao, guiUtils.montarConstraints(2, 2));
+            jPanel.add(tfValorInscricao, guiUtils.montarConstraints(3, 2));
+            jPanel.add(jlPublicoAlvo, guiUtils.montarConstraints(0, 3));
+            jPanel.add(cbPublicoAlvo, guiUtils.montarConstraints(1, 3));
+            jPanel.add(jlDescricao, guiUtils.montarConstraints(2, 3));
+            jPanel.add(tfDescricao, guiUtils.montarConstraints(3, 3));
+            jPanel.add(jlBanner, guiUtils.montarConstraints(0, 4));
+            jPanel.add(tfBanner, guiUtils.montarConstraints(1, 4));
+            jPanel.add(btSelecionarBanner, guiUtils.montarConstraints(2, 4));
+            jPanel.add(jlPalestrante, guiUtils.montarConstraints(0, 5));
+            jPanel.add(cbPalestrante, guiUtils.montarConstraints(1, 5));
+            jPanel.add(jlVagasMaximas, guiUtils.montarConstraints(2, 5));
+            jPanel.add(tfVagasMaximas, guiUtils.montarConstraints(3, 5));
+            jPanel.add(btConfirmar, guiUtils.montarConstraints(0, 6));
+            jPanel.add(btExcluir, guiUtils.montarConstraints(1, 6));
+            jPanel.add(btAtualizar, guiUtils.montarConstraints(2, 6));
+            jPanel.add(btLimpar, guiUtils.montarConstraints(3, 6));
 
-        jPanel.add(jlNome, guiUtils.montarConstraints(2, 0));
-        jPanel.add(tfNome, guiUtils.montarConstraints(3, 0));
-
-        jPanel.add(jlDtInicio, guiUtils.montarConstraints(0, 1));
-        jPanel.add(tfDtInicio, guiUtils.montarConstraints(1, 1));
-
-        jPanel.add(jlDtFim, guiUtils.montarConstraints(2, 1));
-        jPanel.add(tfDtFim, guiUtils.montarConstraints(3, 1));
-
-        jPanel.add(jlLocal, guiUtils.montarConstraints(0, 2));
-        jPanel.add(tfLocal, guiUtils.montarConstraints(1, 2));
-
-        jPanel.add(jlValorIncricao, guiUtils.montarConstraints(2, 2));
-        jPanel.add(tfValorIncricao, guiUtils.montarConstraints(3, 2));
-
-        jPanel.add(jlPublicoAlvo, guiUtils.montarConstraints(0, 3));
-        jPanel.add(cbPublicoAlvo, guiUtils.montarConstraints(1, 3));
-
-        jPanel.add(jlObjetivo, guiUtils.montarConstraints(2, 3));
-        jPanel.add(tfObjetivo, guiUtils.montarConstraints(3, 3));
-
-        jPanel.add(jlBanner, guiUtils.montarConstraints(0, 4));
-        jPanel.add(tfBanner, guiUtils.montarConstraints(1, 4));
-
-        jPanel.add(btSelecionarBanner, guiUtils.montarConstraints(2, 4));
-
-        jPanel.add(jlPalestrante, guiUtils.montarConstraints(2, 4));
-        jPanel.add(tfPalestrante, guiUtils.montarConstraints(3, 4));
-
-        jPanel.add(jlEspecialidade, guiUtils.montarConstraints(0, 5));
-        jPanel.add(tfEspecialidade, guiUtils.montarConstraints(1, 5));
-
-        jPanel.add(jlVagasMaximas, guiUtils.montarConstraints(2, 5));
-        jPanel.add(tfVagasMaximas, guiUtils.montarConstraints(3, 5));
-
-        jPanel.add(btConfirmar, guiUtils.montarConstraints(0, 6));
-        jPanel.add(btExcluir, guiUtils.montarConstraints(1, 6));
-        jPanel.add(btAtualizar, guiUtils.montarConstraints(2, 6));
-        jPanel.add(btLimpar, guiUtils.montarConstraints(3, 6));
-
+        } catch (Exception e) {
+            System.err.println("Erro ao adicionar componentes em montarCampos: " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("Falha ao montar campos: " + e.getMessage(), e);
+        }
         return jPanel;
+    }
+
+    private void carregarPalestrantesComboBox() {
+        cbPalestrante.removeAllItems();
+        cbPalestrante.addItem(null); // Opção para "Nenhum palestrante"
+        try {
+            for (Palestrante p : palestranteService.listarTodos()) {
+                cbPalestrante.addItem(p);
+            }
+            cbPalestrante.setRenderer(new DefaultListCellRenderer() {
+                @Override
+                public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                    super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                    if (value == null) {
+                        setText("Selecione um palestrante");
+                    } else {
+                        setText(((Palestrante) value).getNome());
+                    }
+                    return this;
+                }
+            });
+        } catch (Exception e) {
+            var guiUtils = new GuiUtils();
+            guiUtils.exibirMensagem(this, "Erro ao carregar palestrantes: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void selecionarImagem(ActionEvent e) {
@@ -231,7 +263,7 @@ public class GerEventoGui extends JFrame {
             try {
                 Path destPath = Paths.get(BANNERS_DIR, bannerName);
                 Files.copy(imagemSelecionada.toPath(), destPath);
-                imagemSelecionada = null; // Limpar após copiar
+                imagemSelecionada = null;
             } catch (Exception ex) {
                 guiUtils.exibirMensagem(this, "Erro ao salvar imagem: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -241,16 +273,17 @@ public class GerEventoGui extends JFrame {
         var evento = new Evento();
         try {
             evento.setId(tfId.getText().isEmpty() ? null : Long.parseLong(tfId.getText()));
-            evento.setNome(tfNome.getText().trim()); //trim() remove espaços em branco no começo e no final da string
+            evento.setNome(tfNome.getText().trim());
+            evento.setDescricao(tfDescricao.getText().trim());//trim() remove espaços em branco no começo e no final da string
             evento.setDtInicio(inicio);
             evento.setDtFim(fim);
             evento.setLocal(tfLocal.getText().trim());
-            evento.setValorInscricao(tfValorIncricao.getText());
+            evento.setValorInscricao(tfValorInscricao.getText().trim());
             evento.setPublicoAlvo((String) cbPublicoAlvo.getSelectedItem());
             evento.setObjetivo(tfObjetivo.getText().trim());
             evento.setBanner(tfBanner.getText().trim());
-            evento.setPalestrante(tfPalestrante.getText().trim());
-            evento.setEspecialidade(tfEspecialidade.getText().trim());
+            Palestrante palestrante = (Palestrante) cbPalestrante.getSelectedItem();
+            evento.setIdPalestrantes(palestrante != null ? palestrante.getId() : null);
             evento.setVagasMaximas(vagasMaximas);
         } catch (IllegalArgumentException ex) {
             guiUtils.exibirMensagem(this, ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
@@ -286,6 +319,7 @@ public class GerEventoGui extends JFrame {
                     if (evento.getBanner() != null) {
                         Files.deleteIfExists(Paths.get(BANNERS_DIR, evento.getBanner()));
                     }
+                    eventoService.excluir(pk);
                     GuiUtils.exibirMensagem(this, "Evento excluído com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                     limparCampos();
                     tbEventos.setModel(carregarEventos());
@@ -304,14 +338,14 @@ public class GerEventoGui extends JFrame {
         tfDtInicio.setText(null);
         tfDtFim.setText(null);
         tfLocal.setText(null);
-        tfValorIncricao.setText(null);
-        cbPublicoAlvo.setSelectedIndex(0);
+        tfValorInscricao.setText(null);
         tfObjetivo.setText(null);
         tfBanner.setText(null);
-        tfPalestrante.setText(null);
-        tfEspecialidade.setText(null);
+        tfDescricao.setText(null);
         tfVagasMaximas.setText(null);
         imagemSelecionada = null;
+        cbPalestrante.setSelectedIndex(0);
+        cbPublicoAlvo.setSelectedIndex(0);
     }
 
     private JScrollPane montarTabelaDados(){
@@ -331,9 +365,14 @@ public class GerEventoGui extends JFrame {
         tableModel.addColumn("Palestrante");
         tableModel.addColumn("Max Incrições");
         try {
-            eventoService.listarTodos().forEach(a ->
-                    tableModel.addRow(new Object[]{a.getId(), a.getNome(), a.getDtInicio(), a.getDtFim(), a.getPalestrante(), a.getVagasMaximas()})
-            );
+            for (Evento e : eventoService.listarTodos()) {
+                String palestranteNome = "";
+                if (e.getIdPalestrantes() != null) {
+                    Palestrante p = palestranteService.buscarPorId(e.getIdPalestrantes());
+                    palestranteNome = p != null ? p.getNome() : "";
+                }
+                tableModel.addRow(new Object[]{e.getId(), e.getNome(), formatarTimestamp(e.getDtInicio()), formatarTimestamp(e.getDtFim()), palestranteNome, e.getVagasMaximas()});
+            }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Erro ao carregar eventos: " + e.getMessage());
         }
@@ -344,6 +383,7 @@ public class GerEventoGui extends JFrame {
         if (!e.getValueIsAdjusting()) {
             int linha = tbEventos.getSelectedRow();
             if (linha != -1) {
+                var guiUtils = new GuiUtils();
                 try {
                     Long id = (Long) tbEventos.getValueAt(linha, 0);
                     Evento evento = EventoService.buscarPorId(id);
@@ -352,13 +392,29 @@ public class GerEventoGui extends JFrame {
                     tfDtInicio.setText(formatarTimestamp(evento.getDtInicio()));
                     tfDtFim.setText(formatarTimestamp(evento.getDtFim()));
                     tfLocal.setText(evento.getLocal());
-                    tfValorIncricao.setText(evento.getValorInscricao());
+                    tfValorInscricao.setText(evento.getValorInscricao());
                     cbPublicoAlvo.setSelectedItem(evento.getPublicoAlvo() != null ? evento.getPublicoAlvo() : PUBLICOS_ALVO[0]);
+                    tfDescricao.setText(evento.getDescricao());
                     tfObjetivo.setText(evento.getObjetivo());
                     tfBanner.setText(evento.getBanner());
-                    tfPalestrante.setText(evento.getPalestrante());
-                    tfEspecialidade.setText(evento.getEspecialidade());
                     tfVagasMaximas.setText(String.valueOf(evento.getVagasMaximas()));
+
+                    if (evento.getIdPalestrantes() != null) {
+                        Palestrante palestrante = palestranteService.buscarPorId(evento.getIdPalestrantes());
+                        System.out.println("Palestrante encontrado: " + (palestrante != null ? palestrante.getNome() : "null"));
+                        if (palestrante != null) {
+                            cbPalestrante.setSelectedItem(palestrante);
+                            if (cbPalestrante.getSelectedItem() == null) {
+                                System.out.println("Palestrante não encontrado no JComboBox para ID: " + evento.getIdPalestrantes());
+                            }
+                        } else {
+                            cbPalestrante.setSelectedIndex(0);
+                            System.out.println("Palestrante com ID " + evento.getIdPalestrantes() + " não existe.");
+                        }
+                    } else {
+                        cbPalestrante.setSelectedIndex(0);
+                        System.out.println("Evento sem palestrante associado.");
+                    }
                     imagemSelecionada = null;
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(this, "Erro ao carregar evento: " + ex.getMessage());
