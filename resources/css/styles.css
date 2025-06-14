@@ -1,6 +1,6 @@
 nav {
     /* Degradê suave para o header */
-    background: linear-gradient(90deg, #0e84b3, #074a88, #6b0096);
+    background: linear-gradient(90deg, #6b0096, #074a88, #0e84b3);
 }
 
 nav a i {

@@ -11,6 +11,7 @@ exports.up = function (knex) {
     table.string('email').unique().notNullable();
     table.string('senha').notNullable();
     table.string('empresa');
+    table.boolean('status').defaultTo(false); 
     table.timestamp('created_at').defaultTo(knex.fn.now());
     table.timestamp('updated_at').defaultTo(knex.fn.now());
   });
