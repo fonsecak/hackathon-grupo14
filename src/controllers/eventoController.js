@@ -14,6 +14,7 @@ module.exports = {
   store: async (req, res) => {
     const {
       nome,
+      descricao,
       data_hora_inicio,
       data_hora_fim,
       local,
@@ -21,31 +22,9 @@ module.exports = {
       publico_alvo,
       objetivo,
       banner,
-      palestrante,
-      especialidade,
+      id_palestrante: palestrante,
       vagas_maxima
-    } = req.body;
-
-    try {
-      await db('eventos').insert({
-        nome,
-        data_hora_inicio,
-        data_hora_fim,
-        local,
-        valor_inscricao,
-        publico_alvo,
-        objetivo,
-        banner,
-        palestrante,
-        especialidade,
-        vagas_maxima
-      });
-
-      res.redirect('/');
-    } catch (error) {
-      console.error('Erro ao cadastrar evento:', error);
-      res.status(500).send('Erro ao cadastrar evento');
-    }
+    } = req.body;    
   },
 
   randomHighlights: async (req, res) => {
