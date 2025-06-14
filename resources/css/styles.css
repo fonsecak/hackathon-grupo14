@@ -274,6 +274,14 @@ body.cadastro-page {
     transition: transform 0.2s ease-in-out;
 }
 
+.evento-detalhe .banner-evento {    
+    border-radius: 15%;
+    margin-left: 100px;
+    object-fit: cover;
+    border: 3px solid #005991;
+    transition: transform 0.2s ease-in-out;
+}
+
 .evento-detalhe .foto-perfil:hover {
     transform: scale(1.02);
 }
