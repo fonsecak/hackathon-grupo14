@@ -1,3 +1,27 @@
+<?php
+if (!isset($_GET['id'])) {
+    die("Evento não especificado.");
+}
+
+$id = intval($_GET['id']);
+
+// Busca o evento pelo ID
+$eventoJson = file_get_contents("http://localhost:3000/api/eventos/$id");
+$evento = json_decode($eventoJson, true);
+
+// Verifica se o evento foi encontrado
+if (!$evento) {
+    die("Evento não encontrado.");
+}
+
+// Busca dados do palestrante
+$idPalestrante = $evento['id_palestrantes'];
+$palestranteJson = file_get_contents("http://localhost:3000/api/palestrantes/$idPalestrante");
+$palestrante = json_decode($palestranteJson, true);
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,32 +44,41 @@
      <div class="evento-content">
             <div class="palestrante-section">
                 <div class="palestrante-foto">
-                    <img src="" alt="Palestrante" class="foto-perfil">
+                    <img src="../img/<?= htmlspecialchars($palestrante['foto']) ?>" alt="Foto do palestrante" class="foto-perfil">
                 </div>
                 
                 <div class="palestrante-info">
-                    <h2>Palestrante Teste</h2>
-                    <p class="cargo">CEO & Fundador da TechInnovate</p>
+                    <h2><?= htmlspecialchars($palestrante['nome']) ?></h2>
+                    <p class="cargo">Palestrante do evento</p>
                     
                     <div class="sobre-palestrante">
                         <h3>Sobre o Palestrante</h3>
-                        <p>Descrição breve.</p>
-                        
+                        <p><?= htmlspecialchars($palestrante['sobre']) ?></p>                        
                     </div>
+                </div>
+                <div class="evento-foto">
+                    <img src="../img/<?= htmlspecialchars($evento['banner']) ?>" alt="Banner Evento" class="banner-evento" eight="200" width="300">
                 </div>
             </div>
 
-            <div class="evento-detalhes">
-                
+            <div class="evento-detalhes">                
                 <div class="evento-info">
+                    <h1><?= htmlspecialchars($evento['nome']) ?></h1>
+                    <p class="descricao"><?= htmlspecialchars($evento['descricao']) ?></p>
                     <div class="info-item">
-                        <strong>Data:</strong> 25 de Julho de 2025
+                        <strong>Objetivo:</strong> <?= htmlspecialchars($evento['objetivo']) ?>
                     </div>
                     <div class="info-item">
-                        <strong>Horário:</strong> 19:00 às 21:00
+                        <strong>Público Alvo:</strong> <?= htmlspecialchars($evento['publico_alvo']) ?>
                     </div>
                     <div class="info-item">
-                        <strong>Local:</strong> Centro de Convenções São Paulo - Auditório Principal
+                        <strong>Data:</strong> <?= date('d/m/Y', strtotime($evento['data_hora_inicio'])) ?>
+                    </div>
+                    <div class="info-item">
+                        <strong>Horário:</strong> <?= date('H:i', strtotime($evento['data_hora_inicio'])) ?> às <?= date('H:i', strtotime($evento['data_hora_fim'])) ?>
+                    </div>
+                    <div class="info-item">
+                        <strong>Local:</strong> <?= htmlspecialchars($evento['local']) ?>
                     </div>
                  
                 </div>
@@ -54,10 +87,9 @@
             </div>
 
             <div class="inscricao-section">
-                <div class="preco-info">
-                    <span class="preco-original">R$ 150,00</span>
-                    <span class="preco-promocional">R$ 99,00</span>
-                    <span class="desconto">34% OFF - Promoção por tempo limitado!</span>
+                <div class="preco-info">                    
+                    <span class="preco-promocional">R$: <?= htmlspecialchars($evento['valor_inscricao']) ?></span>
+                    <span class="desconto">Vagas limitadas! <?= htmlspecialchars($evento['vagas_maxima']) ?> vagas</span>
                 </div>
                 
                 <button class="btn-inscricao" >
