@@ -8,8 +8,9 @@ public class Aluno {
     private String email;
     private String senha;
     private String empresa;
+    private String status;
 
-    public Aluno(long id, String nome, String sobrenome, String cpf, String email, String senha, String empresa) {
+    public Aluno(long id, String nome, String sobrenome, String cpf, String email, String senha, String empresa, String status) {
         this.id = id;
         this.nome = nome;
         this.sobrenome = sobrenome;
@@ -17,6 +18,7 @@ public class Aluno {
         this.email = email;
         this.senha = senha;
         this.empresa = empresa;
+        this.status = status;
     }
 
     public long getId() {
@@ -73,5 +75,17 @@ public class Aluno {
 
     public void setEmpresa(String empresa) {
         this.empresa = empresa;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }
