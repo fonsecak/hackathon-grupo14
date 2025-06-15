@@ -33,11 +33,8 @@ function isValidCPF(cpf) {
   return true;
 }
 
-
-
-// Função principal exportada
 async function cadastrarUsuario(req, res) {
-  const { nome, sobrenome, cpf, email, senha, empresa } = req.body;  
+  const { nome, sobrenome, cpf, email, senha, empresa } = req.body;
 
   if (!nome || !sobrenome || !cpf || !email || !senha || !empresa) {
     return res.status(400).json({ erro: 'Todos os campos são obrigatórios.' });
@@ -48,22 +45,20 @@ async function cadastrarUsuario(req, res) {
   }
 
   if (!isValidCPF(cpf)) {
-return res.status(400).json({ erro: 'CPF inválido. Use apenas números.' });
+    return res.status(400).json({ erro: 'CPF inválido.' });
   }
 
   if (senha.length < 6) {
     return res.status(400).json({ erro: 'A senha deve ter pelo menos 6 caracteres.' });
   }
-  
 
   try {
-    // Verificar se já existe CPF
+    // Verificar se já existe na tabela participantes
     const cpfExistente = await knex('participantes').where({ cpf }).first();
     if (cpfExistente) {
       return res.status(400).json({ erro: 'CPF já cadastrado.' });
     }
 
-    // Verificar se já existe Email
     const emailExistente = await knex('participantes').where({ email }).first();
     if (emailExistente) {
       return res.status(400).json({ erro: 'E-mail já cadastrado.' });
@@ -80,49 +75,16 @@ return res.status(400).json({ erro: 'CPF inválido. Use apenas números.' });
       empresa
     });
 
-    
     res.status(201).json({ mensagem: 'Usuário cadastrado com sucesso.' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ erro: 'Erro ao cadastrar usuário.' });
   }
 }
-async function loginUsuario(req, res) {
-  const { email, senha } = req.body;
-
-  if (!email || !senha) {
-    return res.status(400).json({ erro: 'E-mail e senha são obrigatórios.' });
-  }
-
-  try {
-    const usuario = await knex('participantes').where({ email }).first();
-
-    if (!usuario) {
-      return res.status(401).json({ erro: 'E-mail não cadastrado.' });
-    }
-
-    const senhaCorreta = await bcrypt.compare(senha, usuario.senha);
-
-    if (!senhaCorreta) {
-      return res.status(401).json({ erro: 'Senha incorreta.' });
-    }
-
-    return res.status(200).json({
-      mensagem: 'Login realizado com sucesso.',
-      usuario: {
-        id: usuario.id,
-        nome: usuario.nome,
-        email: usuario.email
-        // Aqui você pode incluir mais dados, ou gerar um token (JWT)
-      }
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ erro: 'Erro ao fazer login.' });
-  }
-}
 
 module.exports = {
   cadastrarUsuario,
-  loginUsuario
+  
 };
+
+

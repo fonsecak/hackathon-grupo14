@@ -7,7 +7,7 @@ if (session_status() === PHP_SESSION_NONE) {
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="index.php">
-                <img src="../img/logo.png" alt="Alfa Experience Logo" class="logo-img" width="70" height="60">
+                <img src="../img/logo.png" alt="Alfa Experience Logo" class="logo-img" width="60" height="60">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent">
@@ -45,7 +45,7 @@ if (session_status() === PHP_SESSION_NONE) {
                     <ul class="navbar-nav ms-3">
                         <li class="nav-item">
                             <span class="navbar-text text-light">
-                                Olá, <?= htmlspecialchars($_SESSION['user']['nome'] ?? 'Usuário') ?>!
+                                Olá, <?= htmlspecialchars($_SESSION['user']['nome'] ?? 'User') ?>!
                             </span>
                         </li>
                         <li class="nav-item ms-3">

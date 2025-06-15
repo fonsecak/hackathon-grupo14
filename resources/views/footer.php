@@ -3,7 +3,7 @@
         <div class="row text-center text-md-center align-items-center">
             <div class="col-4 col-md-4 mb-3 mb-md-0 mb-4 mb-md-0">
                 <div class="d-flex flex-column align-items-center align-items-md-start">
-                    <img src="../img/logo.png" alt="Logo AlfaExperience" width="70" height="60" class="mb-2">
+                    <img src="../img/logo.png" alt="Logo AlfaExperience" width="70" height="70" class="mb-2">
                     <span class="fw-bold fs-5">AlfaExperience</span>
                     <small class="d-block mt-2">Conectando alunos a oportunidades acadêmicas excepcionais.</small>
                 </div>
