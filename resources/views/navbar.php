@@ -19,12 +19,12 @@ if (session_status() === PHP_SESSION_NONE) {
                         <a class="nav-link active" href="index.php"><i class="fas fa-home me-1"></i> Início</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="certificado.php"><i class="fas fa-certificate me-1"></i> Certificado</a>
+                        <a class="nav-link active" href="certificado.php"><i class="fas fa-award me-1"></i> Certificado</a>
                     </li>
                 </ul>
-                <form class="d-flex search-form">
+                <form class="d-flex search-form" method="GET" action="eventos.php">
                     <div class="input-group">
-                        <input type="text" class="form-control search-input" placeholder="Pesquisar eventos...">
+                        <input type="text" class="form-control search-input" name="q" placeholder="Pesquisar eventos...">
                         <button class="btn btn-outline-light" type="submit"><i class="fas fa-search"></i></button>
                     </div>
                 </form>
