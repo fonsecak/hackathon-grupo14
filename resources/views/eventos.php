@@ -23,7 +23,7 @@ if ($filtro) {
 
   <!-- Seção: Eventos em destaque -->
   <div class="container py-5">
-    <h2 class="mb-4 text-left">Eventos em destaque.</h2>
+    <h2 class="mb-4 section-title">Eventos em destaque.</h2>
     <div><br></div>
     <div class="row justify-content-center">
       <?php foreach ($destaques as $evento): ?>
@@ -49,9 +49,7 @@ if ($filtro) {
 
   <!-- Seção: Categorias dos cursos -->
   <div class="container py-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <h2 class="mb-0">Explore nossos cursos.</h2>
-    </div>    
+    <h2 class="mb-0 section-title">Explore nossos cursos.</h2>
     <div class="row g-3">
   <?php
   function renderBotaoCategoria($nome, $icone, $filtroAtual) {
@@ -91,7 +89,7 @@ if ($filtro) {
 
   <!-- Seção: Todos os eventos (ou filtrados) -->
   <div class="container py-5">
-    <h2 class="mb-4">
+    <h2 class="mb-4 section-title">
       <?php if ($filtro): ?>
         Eventos para: <?= htmlspecialchars($filtro) ?>
       <?php else: ?>
