@@ -4,17 +4,16 @@ import com.alfa.experience.model.Aluno;
 import com.alfa.experience.service.AlunoService;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 
 public class ListarAlunosGui extends JFrame {
     private JComboBox<Integer> cbEventos; // Simula escolha de evento
     private JTable tabelaAlunos;
     private DefaultTableModel modeloTabela;
-    private AlunoService alunoService = new AlunoService();
+    private final AlunoService alunoService;
 
     public ListarAlunosGui(AlunoService alunoService) {
         this.alunoService = alunoService;
@@ -29,9 +28,11 @@ public class ListarAlunosGui extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // ComboBox para selecionar evento
+        GuiUtils guiUtils = new GuiUtils();
+
+
         cbEventos = new JComboBox<>();
-        cbEventos.addItem(1); // IDs de exemplo, substitua por sua lógica
+        cbEventos.addItem(1);
         cbEventos.addItem(2);
         cbEventos.addActionListener(e -> atualizarTabela());
 
@@ -64,7 +65,7 @@ public class ListarAlunosGui extends JFrame {
                 int idInscricao = alunoService.getIdInscricao(idAluno, idEvento);
                 if (idInscricao != -1) {
                     String status = novoStatus ? "Presente" : "Ausente";
-                    if (alunoService.atualizarStatusInscricao(idInscricao, status)) {
+                    if (alunoService.atualizarStatusInscricao(idInscricao)) {
                         modeloTabela.setValueAt(status, row, 6);
                     }
                 }
@@ -73,21 +74,16 @@ public class ListarAlunosGui extends JFrame {
         });
         JScrollPane scrollPane = new JScrollPane(tabelaAlunos);
 
-        // Botão para fechar
-        JButton btnFechar = GuiUtils.getInstance().criarBotao("Fechar", "primario");
-        btnFechar.addActionListener(e -> dispose());
-
         // Layout
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(new JLabel("Selecione o Evento:"), BorderLayout.NORTH);
         panel.add(cbEventos, BorderLayout.CENTER);
         panel.add(scrollPane, BorderLayout.CENTER);
-        panel.add(btnFechar, BorderLayout.SOUTH);
         add(panel);
     }
 
     private void montarLayout() {
-        // Layout já configurado no inicializarComponentes
+
     }
 
     private void carregarEventos() {
@@ -107,14 +103,9 @@ public class ListarAlunosGui extends JFrame {
                     aluno.getCpf(),
                     aluno.getEmail(),
                     aluno.getEmpresa(),
-                    aluno.getStatus(),
-                    "Presente".equals(aluno.getStatus())
             };
             modeloTabela.addRow(row);
         }
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new ListarAlunosGui().setVisible(true));
-    }
 }

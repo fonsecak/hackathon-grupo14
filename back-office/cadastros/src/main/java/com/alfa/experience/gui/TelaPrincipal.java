@@ -24,7 +24,6 @@ public class TelaPrincipal extends JFrame {
         this.eventoService = eventoService;
         this.palestranteService = palestranteService;
         this.alunoService = alunoService;
-        //this.alunoService = alunoService;
         montarTelaInicial();
     }
 
@@ -61,7 +60,7 @@ public class TelaPrincipal extends JFrame {
 
     public void abrirGerEventoGui() {
         if (gerEventoGui == null || !gerEventoGui.isVisible()) {
-            gerEventoGui = new GerEventoGui(eventoService, palestranteService, this);
+            gerEventoGui = new GerEventoGui(eventoService, palestranteService, this, alunoService);
             configurarFechamento(gerEventoGui, () -> gerEventoGui = null);
             gerEventoGui.setVisible(true);
         } else {
@@ -81,7 +80,7 @@ public class TelaPrincipal extends JFrame {
         }
     }
 
-    private void abrirListarAlunosGui() {
+    void abrirListarAlunosGui() {
         if (listarAlunosGui == null || !listarAlunosGui.isVisible()) {
             listarAlunosGui = new ListarAlunosGui(alunoService);
             configurarFechamento(listarAlunosGui, () -> listarAlunosGui = null);

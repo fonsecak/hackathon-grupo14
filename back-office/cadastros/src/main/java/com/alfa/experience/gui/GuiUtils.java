@@ -258,14 +258,14 @@ public class GuiUtils {
         JMenuItem alunosItem = new JMenuItem("Listar Alunos");
         alunosItem.setFont(FONTE_MENU);
         alunosItem.setForeground(COR_MENU_TEXTO);
-//        alunosItem.addActionListener(e -> {
-//            if (!(telaAtual instanceof ListarAlunosGui)) {
-//                telaPrincipal.abrirListarAlunosGui();
-//                if (!(telaAtual instanceof TelaPrincipal)) {
-//                    telaAtual.dispose();
-//                }
-//            }
-//        });
+        alunosItem.addActionListener(e -> {
+            if (!(telaAtual instanceof ListarAlunosGui)) {
+                telaPrincipal.abrirListarAlunosGui();
+                if (!(telaAtual instanceof TelaPrincipal)) {
+                    telaAtual.dispose();
+                }
+            }
+        });
 
         navegacaoMenu.add(eventosItem);
         navegacaoMenu.add(palestrantesItem);

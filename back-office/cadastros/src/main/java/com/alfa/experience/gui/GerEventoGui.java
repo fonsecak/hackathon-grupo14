@@ -2,6 +2,7 @@ package com.alfa.experience.gui;
 
 import com.alfa.experience.model.Evento;
 import com.alfa.experience.model.Palestrante;
+import com.alfa.experience.service.AlunoService;
 import com.alfa.experience.service.EventoService;
 import com.alfa.experience.service.PalestranteService;
 
@@ -63,7 +64,7 @@ public class GerEventoGui extends JFrame {
     private static final String[] PUBLICOS_ALVO = {"Todos","Administração", "Ciências Contábeis", "Direito", "Sistemas p/ Internet", "Pedagogia", "Psicologia"};
     private static final String BANNERS_DIR = "../../resources/img";  //Pasta onde é salva as imagens
 
-    public GerEventoGui(EventoService eventoService, PalestranteService palestranteService, TelaPrincipal telaPrincipal) {
+    public GerEventoGui(EventoService eventoService, PalestranteService palestranteService, TelaPrincipal telaPrincipal, AlunoService alunoService) {
         if (eventoService == null || palestranteService == null) {
             JOptionPane.showMessageDialog(null, "Erro: Serviços não inicializados.", "Erro", JOptionPane.ERROR_MESSAGE);
             throw new IllegalArgumentException("EventoService ou PalestranteService não podem ser nulos.");
