@@ -17,6 +17,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
@@ -136,7 +137,7 @@ public class GerEventoGui extends JFrame {
         tfBanner = guiUtils.criarTextField(20);
         tfBanner.setEditable(false);
         tfBanner.setBackground(GuiUtils.COR_CAMPO_DESABILITADO);
-        btSelecionarBanner = guiUtils.criarBotao("Selecionar","primario");
+        btSelecionarBanner = guiUtils.criarBotaoSelecionar("Selecionar Imagem");
         btSelecionarBanner.addActionListener(this::selecionarImagem);
         jlPalestrante = guiUtils.criarLabel("Palestrante");
         cbPalestrante = new JComboBox<>();
@@ -162,31 +163,36 @@ public class GerEventoGui extends JFrame {
             jPanel.add(tfId, guiUtils.montarConstraints(1, 0));
             jPanel.add(jlNome, guiUtils.montarConstraints(2, 0));
             jPanel.add(tfNome, guiUtils.montarConstraints(3, 0));
+            jPanel.add(jlLocal, guiUtils.montarConstraints(4, 0));
+            jPanel.add(tfLocal, guiUtils.montarConstraints(5, 0));
+
             jPanel.add(jlDtInicio, guiUtils.montarConstraints(0, 1));
             jPanel.add(tfDtInicio, guiUtils.montarConstraints(1, 1));
             jPanel.add(jlDtFim, guiUtils.montarConstraints(2, 1));
             jPanel.add(tfDtFim, guiUtils.montarConstraints(3, 1));
-            jPanel.add(jlLocal, guiUtils.montarConstraints(0, 2));
-            jPanel.add(tfLocal, guiUtils.montarConstraints(1, 2));
-            jPanel.add(jlValorInscricao, guiUtils.montarConstraints(2, 2));
-            jPanel.add(tfValorInscricao, guiUtils.montarConstraints(3, 2));
-            jPanel.add(jlPublicoAlvo, guiUtils.montarConstraints(0, 3));
-            jPanel.add(cbPublicoAlvo, guiUtils.montarConstraints(1, 3));
-            jPanel.add(jlDescricao, guiUtils.montarConstraints(2, 3));
-            jPanel.add(tfDescricao, guiUtils.montarConstraints(3, 3));
-            jPanel.add(jlBanner, guiUtils.montarConstraints(0, 4));
-            jPanel.add(tfBanner, guiUtils.montarConstraints(1, 4));
-            jPanel.add(btSelecionarBanner, guiUtils.montarConstraints(2, 4));
-            jPanel.add(jlPalestrante, guiUtils.montarConstraints(0, 5));
-            jPanel.add(cbPalestrante, guiUtils.montarConstraints(1, 5));
-            jPanel.add(jlVagasMaximas, guiUtils.montarConstraints(2, 5));
-            jPanel.add(tfVagasMaximas, guiUtils.montarConstraints(3, 5));
-            jPanel.add(jlObjetivo, guiUtils.montarConstraints(4,5));
-            jPanel.add(tfObjetivo, guiUtils.montarConstraints(5,5));
-            jPanel.add(btConfirmar, guiUtils.montarConstraints(0, 6));
-            jPanel.add(btExcluir, guiUtils.montarConstraints(1, 6));
-            jPanel.add(btAtualizar, guiUtils.montarConstraints(2, 6));
-            jPanel.add(btLimpar, guiUtils.montarConstraints(3, 6));
+            jPanel.add(jlValorInscricao, guiUtils.montarConstraints(4, 1));
+            jPanel.add(tfValorInscricao, guiUtils.montarConstraints(5, 1));
+
+            jPanel.add(jlPublicoAlvo, guiUtils.montarConstraints(0, 2));
+            jPanel.add(cbPublicoAlvo, guiUtils.montarConstraints(1, 2));
+            jPanel.add(jlDescricao, guiUtils.montarConstraints(2, 2));
+            jPanel.add(tfDescricao, guiUtils.montarConstraints(3, 2));
+            jPanel.add(jlObjetivo, guiUtils.montarConstraints(4,2));
+            jPanel.add(tfObjetivo, guiUtils.montarConstraints(5,2));
+
+
+            jPanel.add(jlPalestrante, guiUtils.montarConstraints(0, 4));
+            jPanel.add(cbPalestrante, guiUtils.montarConstraints(1, 4));
+            jPanel.add(jlVagasMaximas, guiUtils.montarConstraints(2, 4));
+            jPanel.add(tfVagasMaximas, guiUtils.montarConstraints(3, 4));
+            jPanel.add(jlBanner, guiUtils.montarConstraints(4, 4));
+            jPanel.add(tfBanner, guiUtils.montarConstraints(5, 4));
+            jPanel.add(btSelecionarBanner, guiUtils.montarConstraints(6, 4));
+
+            jPanel.add(btConfirmar, guiUtils.montarConstraints(1, 6));
+            jPanel.add(btAtualizar, guiUtils.montarConstraints(3, 6));
+            jPanel.add(btLimpar, guiUtils.montarConstraints(5, 6));
+            jPanel.add(btExcluir, guiUtils.montarConstraints(6, 6));
 
         } catch (Exception e) {
             System.err.println("Erro ao adicionar componentes em montarCampos: " + e.getMessage());
@@ -243,29 +249,100 @@ public class GerEventoGui extends JFrame {
     private void salvarEvento() {
         var guiUtils = new GuiUtils();
 
-        if (!guiUtils.validarCamposObrigatorios(tfNome)) {
-            guiUtils.exibirMensagem(this, "O nome do evento é obrigatório.", "Erro", JOptionPane.ERROR_MESSAGE);
+        if (tfNome.getText().trim().isEmpty()) {
+            guiUtils.exibirMensagem(this, "O campo Título é obrigatório.", "Erro", JOptionPane.ERROR_MESSAGE);
+            guiUtils.validarCamposObrigatorios(tfNome);
+            return;
+        } else {
+            guiUtils.validarCamposObrigatorios(tfNome);
+        }
+
+        LocalDateTime inicio = obterLocalDateTimeValido(tfDtInicio);
+        if (inicio == null) {
+            guiUtils.exibirMensagem(this, "O campo Data de Início é obrigatório e deve ser válido.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        LocalDateTime fim = obterLocalDateTimeValido(tfDtFim);
+        if (fim == null) {
+            guiUtils.exibirMensagem(this, "O campo Data Fim é obrigatório e deve ser válido.", "Erro", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        Timestamp inicio = obterTimestampValido(tfDtInicio);
-        Timestamp fim = obterTimestampValido(tfDtFim);
-
-        if (inicio == null || fim == null) {
-            guiUtils.exibirMensagem(this, "Datas inválidas.", "Erro", JOptionPane.ERROR_MESSAGE);
+        // Validação de data futura e intervalo
+        LocalDateTime agora = LocalDateTime.now(ZoneId.of("America/Sao_Paulo")); // Fuso -03 (Brasília)
+        if (inicio.isBefore(agora)) {
+            guiUtils.exibirMensagem(this, "A Data de Início deve ser no futuro.", "Erro", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        Integer vagasMaximas = null;
+        if (fim.isBefore(inicio)) {
+            guiUtils.exibirMensagem(this, "A Data Fim deve ser maior que a Data de Início.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (tfVagasMaximas.getText().trim().isEmpty()) {
+            guiUtils.exibirMensagem(this, "O campo Vagas Máximas é obrigatório.", "Erro", JOptionPane.ERROR_MESSAGE);
+            guiUtils.validarCamposObrigatorios(tfVagasMaximas);
+            return;
+        }else {
+            guiUtils.validarCamposObrigatorios(tfVagasMaximas);
+        }
         try {
-            if (!tfVagasMaximas.getText().isEmpty()) {
-                vagasMaximas = Integer.valueOf(tfVagasMaximas.getText().trim());
-                if (vagasMaximas <= 0) {
-                    guiUtils.exibirMensagem(this, "Vagas máximas deve ser maior que zero.", "Erro", JOptionPane.ERROR_MESSAGE);
+            int vagas = Integer.parseInt(tfVagasMaximas.getText().trim());
+            if (vagas <= 0) {
+                guiUtils.exibirMensagem(this, "Vagas Máximas deve ser maior que zero.", "Erro", JOptionPane.ERROR_MESSAGE);
+                guiUtils.validarCamposObrigatorios(tfVagasMaximas);
+                return;
+            } else {
+                guiUtils.validarCamposObrigatorios(tfVagasMaximas);
+            }
+        } catch (NumberFormatException e) {
+            guiUtils.exibirMensagem(this, "Vagas Máximas deve ser um número válido.", "Erro", JOptionPane.ERROR_MESSAGE);
+            guiUtils.validarCamposObrigatorios(tfVagasMaximas);
+            return;
+        }
+        if (tfLocal.getText().trim().isEmpty()) {
+            guiUtils.exibirMensagem(this, "O campo Local é obrigatório.", "Erro", JOptionPane.ERROR_MESSAGE);
+            guiUtils.validarCamposObrigatorios(tfLocal);
+            return;
+        }else {
+            guiUtils.validarCamposObrigatorios(tfLocal);
+        }
+        if (tfObjetivo.getText().trim().isEmpty()) {
+            guiUtils.exibirMensagem(this, "O campo Objetivo é obrigatório.", "Erro", JOptionPane.ERROR_MESSAGE);
+            guiUtils.validarCamposObrigatorios(tfObjetivo);
+            return;
+        }else {
+            guiUtils.validarCamposObrigatorios(tfObjetivo);
+        }
+        if (tfDescricao.getText().trim().isEmpty()) {
+            guiUtils.exibirMensagem(this, "O campo Descrição é obrigatório.", "Erro", JOptionPane.ERROR_MESSAGE);
+            guiUtils.validarCamposObrigatorios(tfDescricao);
+            return;
+        }else {
+            guiUtils.validarCamposObrigatorios(tfDescricao);
+        }
+        if (cbPublicoAlvo.getSelectedItem() == null) {
+            guiUtils.exibirMensagem(this, "O campo Público Alvo é obrigatório.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (cbPalestrante.getSelectedItem() == null) {
+            guiUtils.exibirMensagem(this, "O campo Palestrante é obrigatório.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        try {
+            if (!tfValorInscricao.getText().trim().isEmpty()) {
+                double valor = Double.parseDouble(tfValorInscricao.getText().trim());
+                if (valor < 0) {
+                    guiUtils.exibirMensagem(this, "Valor Inscrição não pode ser negativo.", "Erro", JOptionPane.ERROR_MESSAGE);
+                    guiUtils.validarCamposObrigatorios(tfValorInscricao);
                     return;
+                }else {
+                    guiUtils.validarCamposObrigatorios(tfValorInscricao);
                 }
             }
-        } catch (NumberFormatException ex) {
-            guiUtils.exibirMensagem(this, "Vagas máximas deve ser um número válido.", "Erro", JOptionPane.ERROR_MESSAGE);
+        } catch (NumberFormatException e) {
+            guiUtils.exibirMensagem(this, "Valor Inscrição deve ser um número válido ou vazio.", "Erro", JOptionPane.ERROR_MESSAGE);
+            guiUtils.validarCamposObrigatorios(tfValorInscricao);
             return;
         }
 
@@ -287,8 +364,8 @@ public class GerEventoGui extends JFrame {
             evento.setId(tfId.getText().isEmpty() ? null : Long.parseLong(tfId.getText()));
             evento.setNome(tfNome.getText().trim());
             evento.setDescricao(tfDescricao.getText().trim());//trim() remove espaços em branco no começo e no final da string
-            evento.setDtInicio(inicio);
-            evento.setDtFim(fim);
+            evento.setDtInicio(Timestamp.valueOf(inicio));
+            evento.setDtFim(Timestamp.valueOf(fim));
             evento.setLocal(tfLocal.getText().trim());
             evento.setValorInscricao(tfValorInscricao.getText().trim());
             evento.setPublicoAlvo((String) cbPublicoAlvo.getSelectedItem());
@@ -296,7 +373,7 @@ public class GerEventoGui extends JFrame {
             evento.setBanner(bannerName.isEmpty() ? null : bannerName);
             Palestrante palestrante = (Palestrante) cbPalestrante.getSelectedItem();
             evento.setIdPalestrantes(palestrante != null ? palestrante.getId() : null);
-            evento.setVagasMaximas(vagasMaximas);
+            evento.setVagasMaximas(Integer.valueOf(tfVagasMaximas.getText().trim()));
         } catch (IllegalArgumentException ex) {
             guiUtils.exibirMensagem(this, ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
             return;
@@ -444,24 +521,16 @@ public class GerEventoGui extends JFrame {
         return timestamp.toLocalDateTime().format(formatter);
     }
 
-    public static Timestamp obterTimestampValido(JFormattedTextField campo) {
-        // Esse método é responsável por pegar o valor digitado no campo formatado e converter para Timestamp.
+    public static LocalDateTime obterLocalDateTimeValido(JFormattedTextField campo) {
         String texto = campo.getText().trim();
-        // Aqui eu verifico se o campo ainda está com espaços em branco ou preenchido com valor inválido.
         if (texto.contains("_") || texto.equals("00/00/0000 00:00")) {
             return null;
         }
         try {
-            // Eu uso o DateTimeFormatter para converter o texto do campo para um LocalDateTime,
-            // usando o padrão que inclui data e hora.
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-            LocalDateTime dataHora = LocalDateTime.parse(texto, formatter);
-
-            // Por fim, converto o LocalDateTime para Timestamp e retorno.
-            return Timestamp.valueOf(dataHora);
+            return LocalDateTime.parse(texto, formatter);
         } catch (DateTimeParseException e) {
-            return null; // se a data for inválida, retorna null
+            return null;
         }
     }
-
 }

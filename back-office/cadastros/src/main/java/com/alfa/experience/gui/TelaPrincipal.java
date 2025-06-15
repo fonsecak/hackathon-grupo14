@@ -35,9 +35,9 @@ public class TelaPrincipal extends JFrame {
 
         // Logo
         JLabel jlLogo = new JLabel();
-        java.net.URL logoURL = getClass().getResource("/img/logo.png");
+        java.net.URL logoURL = getClass().getResource("/img/logojava.png");
         ImageIcon logo = new ImageIcon(logoURL);
-        Image imagem = logo.getImage().getScaledInstance(500, 350, Image.SCALE_SMOOTH);
+        Image imagem = logo.getImage().getScaledInstance(500, 450, Image.SCALE_SMOOTH);
         jlLogo.setIcon(new ImageIcon(imagem));
 
         // Painel principal com logo
