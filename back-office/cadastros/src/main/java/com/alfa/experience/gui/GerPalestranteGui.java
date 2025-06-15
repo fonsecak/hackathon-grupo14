@@ -14,13 +14,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class GerPalestranteGui extends JFrame {
 
     private final PalestranteService palestranteService;
+    private final TelaPrincipal telaPrincipal;
 
     private JLabel jlId;
     private JTextField tfId;
@@ -42,8 +42,9 @@ public class GerPalestranteGui extends JFrame {
 
     private static final String FOTOS_DIR = "../../resources/img/";
 
-    public GerPalestranteGui(PalestranteService palestranteService) {
+    public GerPalestranteGui(PalestranteService palestranteService, TelaPrincipal telaPrincipal) {
         this.palestranteService = palestranteService;
+        this.telaPrincipal = telaPrincipal;
         criarDiretorioFotos();
         mostrarTela();
     }
@@ -57,8 +58,10 @@ public class GerPalestranteGui extends JFrame {
 
     private void mostrarTela() {
         var guiUtils = new GuiUtils();
-        guiUtils.montarTelaPadrao(this, "Gerenciamento de Palestrantes - AlfaExperience", 600, 400);
+        guiUtils.montarTelaPadrao(this, "Gerenciamento de Palestrantes - AlfaExperience", 600, 800);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        setJMenuBar(guiUtils.criarMenuBar(this, telaPrincipal));
 
         JLabel titulo = new JLabel("Gerenciamento de Palestrantes", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 16));
@@ -85,16 +88,16 @@ public class GerPalestranteGui extends JFrame {
         jlFoto = guiUtils.criarLabel("Foto");
         tfFoto = guiUtils.criarTextField(20);
         tfFoto.setEditable(false);
-        btSelecionarFoto = guiUtils.criarBotao("Selecionar");
+        btSelecionarFoto = guiUtils.criarBotao("Selecionar", "primario");
         btSelecionarFoto.addActionListener(this::selecionarImagem);
 
-        btConfirmar = guiUtils.criarBotao("Confirmar");
+        btConfirmar = guiUtils.criarBotao("Confirmar","primario");
         btConfirmar.addActionListener(this::confirmar);
-        btExcluir = guiUtils.criarBotao("Excluir");
+        btExcluir = guiUtils.criarBotao("Excluir","perigo");
         btExcluir.addActionListener(this::excluir);
-        btAtualizar = guiUtils.criarBotao("Atualizar");
+        btAtualizar = guiUtils.criarBotao("Atualizar","primario");
         btAtualizar.addActionListener(this::atualizar);
-        btLimpar = guiUtils.criarBotao("Limpar");
+        btLimpar = guiUtils.criarBotao("Limpar","secundario");
         btLimpar.addActionListener(e -> limparCampos());
 
         jPanel.add(jlId, guiUtils.montarConstraints(0, 0));
