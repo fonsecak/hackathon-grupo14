@@ -1,8 +1,9 @@
 const express = require('express');
+require('dotenv').config();
 const eventosRoutes = require('./src/routes/eventos');
 const usuariosRoutes = require('./src/routes/usuarios'); 
 const loginRoutes = require('./src/routes/login');
-const certificadoRoutes = require('./src/routes/certificado'); 
+const certificadoRoutes = require('./src/routes/certificados'); 
 const palestrantesRoutes = require('./src/routes/palestrantes'); 
 const path = require('path');
 const app = express();
@@ -15,8 +16,8 @@ app.use(express.json());
 
 app.use('/api/eventos', eventosRoutes);
 app.use('/api/usuarios', usuariosRoutes);
-app.use('/login', loginRoutes);
-app.use('/api/certificado', certificadoRoutes);
+app.use('/api/login', loginRoutes);
+app.use('/api/certificados', certificadoRoutes);
 app.use('/api/palestrantes', palestrantesRoutes);
 
 app.use('/img', express.static(path.join(__dirname, 'resources/img')));

@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $data = array("email" => $email, "senha" => $senha);
   $json_data = json_encode($data);
 
-  $ch = curl_init('http://localhost:3000/login');
+  $ch = curl_init('http://localhost:3000/api/login');
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
   curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
   curl_setopt($ch, CURLOPT_POST, true);
@@ -27,12 +27,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $resData = json_decode($response, true);
 
   if ($httpCode === 200 && isset($resData['success']) && $resData['success']) {
-    $_SESSION['user'] = $resData['user'];
-    header('Location: index.php'); // redireciona para "limpar" o POST
+    $userData = $resData['user'];
+    $userData['token'] = $resData['token'] ?? null; // Adiciona o token ao array do usuário
+    $_SESSION['user'] = $userData;
+    header('Location: index.php'); // Redireciona diretamente para certificados
     exit;
-  } else {
-    $erro = $resData['message'] ?? 'Erro desconhecido';
-  }
+}
 }
 ?>
 
@@ -44,7 +44,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/styles.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -53,8 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>AlfaExperience</title>
 </head>
 
-<body>
-    
+<body>    
 
     <?php include 'navbar.php'; ?>
 

@@ -35,11 +35,10 @@ $palestrante = json_decode($palestranteJson, true);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     
 </head>
-<body class="evento-detalhe">
-
-    <?php include 'navbar.php'; ?>
-    <div class="container">
-      
+<body >
+    <?php include 'navbar.php'; ?> 
+    <div class="evento-detalhe">  
+    <div class="container">     
 
      <div class="evento-content">
             <div class="palestrante-section">
@@ -101,7 +100,7 @@ $palestrante = json_decode($palestranteJson, true);
             </div>
         </div>
     </div>
-
+</div> 
     <?php include 'footer.php'; ?>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </body>
