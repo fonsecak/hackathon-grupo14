@@ -129,6 +129,7 @@ public class GerEventoGui extends JFrame {
         tfValorInscricao = guiUtils.criarTextField(20);
         jlPublicoAlvo = guiUtils.criarLabel("Público Alvo");
         cbPublicoAlvo = new JComboBox<>(PUBLICOS_ALVO);
+        cbPublicoAlvo.setFont(GuiUtils.FONTE_CAMPO);
         cbPublicoAlvo.setBackground(GuiUtils.COR_CAMPO_TEXTO);
         cbPublicoAlvo.setForeground(GuiUtils.COR_TEXTO_LABEL);
         jlObjetivo = guiUtils.criarLabel("Objetivo");
