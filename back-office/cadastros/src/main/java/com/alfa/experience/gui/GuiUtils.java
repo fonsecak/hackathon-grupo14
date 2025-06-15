@@ -10,17 +10,17 @@ import java.text.ParseException;
 
 public class GuiUtils {
 
-    // Paleta de cores centralizada
-    public static final Color COR_PRIMARIA = new Color(46, 125, 50);
-    public static final Color COR_SECUNDARIA = new Color(2, 136, 209);
-    public static final Color COR_PERIGO = new Color(211, 47, 47);
-    public static final Color COR_FUNDO_TELA = new Color(245, 245, 245);
+    public static final Color COR_PRIMARIA = new Color(25, 118, 210); // Azul escuro (#1976D2)
+    public static final Color COR_SECUNDARIA = new Color(66, 165, 245); // Azul médio (#42A5F5)
+    public static final Color COR_PERIGO = new Color(211, 47, 47); // Vermelho mantido (#D32F2F)
+    public static final Color COR_FUNDO_TELA = new Color(187, 222, 251); // Azul claro (#BBDEFB)
     public static final Color COR_CAMPO_TEXTO = Color.WHITE;
-    public static final Color COR_BORDA_CAMPO = new Color(176, 190, 197);
-    public static final Color COR_TEXTO_LABEL = new Color(55, 71, 79);
-    public static final Color COR_CAMPO_DESABILITADO = new Color(236, 239, 241);
-    public static final Color COR_MENU_FUNDO = new Color(238, 238, 238); // Fundo do menu
-    public static final Color COR_MENU_TEXTO = COR_TEXTO_LABEL;
+    public static final Color COR_BORDA_CAMPO = new Color(144, 202, 249); // Azul borda (#90CAF9)
+    public static final Color COR_TEXTO_LABEL = new Color(33, 33, 33); // Cinza escuro (#212121)
+    public static final Color COR_CAMPO_DESABILITADO = new Color(227, 242, 253); // Azul muito claro (#E3F2FD)
+    public static final Color COR_MENU_FUNDO = new Color(66, 165, 245); // Azul médio (#42A5F5)
+    public static final Color COR_MENU_TEXTO = Color.WHITE; // Branco (#FFFFFF)
+    public static final Color COR_BOTAO_SELECIONAR = new Color(119, 119, 119);
 
     // Fontes
     public static final Font FONTE_LABEL = new Font("Roboto", Font.PLAIN, 14);
@@ -30,9 +30,19 @@ public class GuiUtils {
 
     // Bordas
     private static final Border BORDA_CAMPO = BorderFactory.createLineBorder(COR_BORDA_CAMPO, 1, true);
+    private static final Border BORDA_CAMPO_ATENCAO = BorderFactory.createLineBorder(COR_PERIGO, 1, true);
     private static final Border MARGEM_CAMPO = new EmptyBorder(8, 8, 8, 8);
     private static final Border BORDA_COMPOSTA = new CompoundBorder(BORDA_CAMPO, MARGEM_CAMPO);
+    private static final Border BORDA_ATENCAO = new CompoundBorder(BORDA_CAMPO_ATENCAO, MARGEM_CAMPO);
 
+    public void montarTelaPadrao(JFrame frame, String titulo, Integer largura, Integer altura) {
+        frame.setTitle(titulo);
+        frame.setSize(largura, altura);
+        frame.setLocationRelativeTo(null);
+        frame.getContentPane().setBackground(COR_FUNDO_TELA);
+        aplicarIcone(frame);
+        aplicarTema();
+    }
 
     public GridBagConstraints montarConstraints(int x, int y) {
         return montarConstraints(x, y, 1, 0.0, GridBagConstraints.WEST);
@@ -50,13 +60,10 @@ public class GuiUtils {
         return constraint;
     }
 
-
-    public void montarTelaPadrao(JFrame frame, String titulo, Integer largura, Integer altura) {
-        frame.setTitle(titulo);
-        frame.setSize(largura, altura);
-        frame.setLocationRelativeTo(null);
-        frame.getContentPane().setBackground(COR_FUNDO_TELA);
-        aplicarTema();
+    public void aplicarIcone(JFrame frame) {
+        java.net.URL iconeURL = getClass().getResource("/img/logojava.png");
+        ImageIcon icone = new ImageIcon(iconeURL);
+        frame.setIconImage(icone.getImage());
     }
 
     public JLabel criarLabel(String texto) {
@@ -137,6 +144,18 @@ public class GuiUtils {
         return botao;
     }
 
+    public JButton criarBotaoSelecionar(String texto) {
+        JButton botao = new JButton(texto);
+        botao.setFont(FONTE_BOTAO);
+        botao.setForeground(Color.WHITE);
+        botao.setBorder(new EmptyBorder(12, 24, 12, 24));
+        botao.setFocusPainted(false);
+        botao.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        botao.setBackground(COR_BOTAO_SELECIONAR);
+        botao.setOpaque(true);
+        return botao;
+    }
+
     private Color escurecerCor(Color cor, float fator) {
         int r = Math.max(0, (int) (cor.getRed() * fator));
         int g = Math.max(0, (int) (cor.getGreen() * fator));
@@ -154,14 +173,14 @@ public class GuiUtils {
     public void aplicarTema() {
         try {
             UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-            UIManager.put("control", COR_FUNDO_TELA);
-            UIManager.put("text", COR_TEXTO_LABEL);
-            UIManager.put("nimbusBase", COR_PRIMARIA);
-            UIManager.put("nimbusSelectionBackground", COR_PRIMARIA);
-            UIManager.put("textField.disabledBackground", COR_CAMPO_DESABILITADO);
-            UIManager.put("MenuBar.background", COR_MENU_FUNDO);
-            UIManager.put("Menu.foreground", COR_MENU_TEXTO);
-            UIManager.put("MenuItem.foreground", COR_MENU_TEXTO);
+            UIManager.put("control", COR_FUNDO_TELA); // Azul claro (#BBDEFB)
+            UIManager.put("text", COR_TEXTO_LABEL); // Cinza escuro (#212121)
+            UIManager.put("nimbusBase", COR_PRIMARIA); // Azul escuro (#1976D2)
+            UIManager.put("nimbusSelectionBackground", COR_PRIMARIA); // Azul escuro (#1976D2)
+            UIManager.put("textField.disabledBackground", COR_CAMPO_DESABILITADO); // Azul muito claro (#E3F2FD)
+            UIManager.put("MenuBar.background", COR_MENU_FUNDO); // Azul médio (#42A5F5)
+            UIManager.put("Menu.foreground", COR_MENU_TEXTO); // Branco (#FFFFFF)
+            UIManager.put("MenuItem.foreground", COR_MENU_TEXTO); // Branco (#FFFFFF)
         } catch (Exception e) {
             System.err.println("Erro ao aplicar tema: " + e.getMessage());
         }
@@ -174,7 +193,7 @@ public class GuiUtils {
     public boolean validarCamposObrigatorios(JTextField... campos) {
         for (JTextField campo : campos) {
             if (campo.getText().trim().isEmpty()) {
-                campo.setBorder(BorderFactory.createLineBorder(Color.RED, 1, true));
+                campo.setBorder(BORDA_ATENCAO);
                 return false;
             } else {
                 campo.setBorder(BORDA_COMPOSTA);

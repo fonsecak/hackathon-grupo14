@@ -81,6 +81,7 @@ public class GerPalestranteGui extends JFrame {
         jlId = guiUtils.criarLabel("ID");
         tfId = guiUtils.criarTextField(20);
         tfId.setEditable(false);
+        tfId.setBackground(GuiUtils.COR_CAMPO_DESABILITADO);
         jlNome = guiUtils.criarLabel("Nome");
         tfNome = guiUtils.criarTextField(20);
         jlSobre = guiUtils.criarLabel("Sobre");
@@ -88,8 +89,10 @@ public class GerPalestranteGui extends JFrame {
         jlFoto = guiUtils.criarLabel("Foto");
         tfFoto = guiUtils.criarTextField(20);
         tfFoto.setEditable(false);
-        btSelecionarFoto = guiUtils.criarBotao("Selecionar", "primario");
+        tfFoto.setBackground(GuiUtils.COR_CAMPO_DESABILITADO);
+        btSelecionarFoto = guiUtils.criarBotaoSelecionar("Selecionar Imagem");
         btSelecionarFoto.addActionListener(this::selecionarImagem);
+
 
         btConfirmar = guiUtils.criarBotao("Confirmar","primario");
         btConfirmar.addActionListener(this::confirmar);
@@ -109,10 +112,10 @@ public class GerPalestranteGui extends JFrame {
         jPanel.add(jlFoto, guiUtils.montarConstraints(0, 3));
         jPanel.add(tfFoto, guiUtils.montarConstraints(1, 3));
         jPanel.add(btSelecionarFoto, guiUtils.montarConstraints(2, 3));
-        jPanel.add(btConfirmar, guiUtils.montarConstraints(0, 4));
-        jPanel.add(btExcluir, guiUtils.montarConstraints(1, 4));
+        jPanel.add(btConfirmar, guiUtils.montarConstraints(1, 4));
         jPanel.add(btAtualizar, guiUtils.montarConstraints(2, 4));
-        jPanel.add(btLimpar, guiUtils.montarConstraints(3, 4));
+        jPanel.add(btLimpar, guiUtils.montarConstraints(4, 4));
+        jPanel.add(btExcluir, guiUtils.montarConstraints(5, 4));
 
         return jPanel;
     }
@@ -171,6 +174,21 @@ public class GerPalestranteGui extends JFrame {
 
     private void salvarPalestrante() {
         var guiUtils = new GuiUtils();
+
+        if (tfNome.getText().trim().isEmpty()) {
+            guiUtils.exibirMensagem(this, "O campo Nome é obrigatório.", "Erro", JOptionPane.ERROR_MESSAGE);
+            guiUtils.validarCamposObrigatorios(tfNome);
+            return;
+        } else {
+            guiUtils.validarCamposObrigatorios(tfNome);
+        }
+        if (tfSobre.getText().trim().isEmpty()) {
+            guiUtils.exibirMensagem(this, "O campo Sobre é obrigatório.", "Erro", JOptionPane.ERROR_MESSAGE);
+            guiUtils.validarCamposObrigatorios(tfSobre);
+            return;
+        } else {
+            guiUtils.validarCamposObrigatorios(tfSobre);
+        }
 
         String fotoName = tfFoto.getText().trim();
         if (imagemSelecionada != null && !fotoName.isEmpty()) {
