@@ -10,23 +10,24 @@ import java.text.ParseException;
 
 public class GuiUtils {
 
-    public static final Color COR_PRIMARIA = new Color(25, 118, 210); // Azul escuro (#1976D2)
-    public static final Color COR_SECUNDARIA = new Color(66, 165, 245); // Azul médio (#42A5F5)
-    public static final Color COR_PERIGO = new Color(211, 47, 47); // Vermelho mantido (#D32F2F)
-    public static final Color COR_FUNDO_TELA = new Color(187, 222, 251); // Azul claro (#BBDEFB)
+    public static final Color COR_PRIMARIA = new Color(11, 62, 134);
+    public static final Color COR_TERCIARIA = new Color(56, 56, 56);
+    public static final Color COR_SECUNDARIA = new Color(54, 136, 201);
+    public static final Color COR_PERIGO = new Color(162, 36, 36);
+    public static final Color COR_FUNDO_TELA = new Color(241, 241, 241, 255);
     public static final Color COR_CAMPO_TEXTO = Color.WHITE;
-    public static final Color COR_BORDA_CAMPO = new Color(144, 202, 249); // Azul borda (#90CAF9)
-    public static final Color COR_TEXTO_LABEL = new Color(33, 33, 33); // Cinza escuro (#212121)
-    public static final Color COR_CAMPO_DESABILITADO = new Color(227, 242, 253); // Azul muito claro (#E3F2FD)
-    public static final Color COR_MENU_FUNDO = new Color(66, 165, 245); // Azul médio (#42A5F5)
-    public static final Color COR_MENU_TEXTO = Color.WHITE; // Branco (#FFFFFF)
+    public static final Color COR_BORDA_CAMPO = new Color(192, 192, 192);
+    public static final Color COR_TEXTO_LABEL = new Color(33, 33, 33);
+    public static final Color COR_CAMPO_DESABILITADO = new Color(157, 157, 157);
+    public static final Color COR_MENU_FUNDO = new Color(13, 52, 80);
+    public static final Color COR_MENU_TEXTO = Color.WHITE;
     public static final Color COR_BOTAO_SELECIONAR = new Color(119, 119, 119);
 
     // Fontes
-    public static final Font FONTE_LABEL = new Font("Roboto", Font.PLAIN, 14);
-    public static final Font FONTE_CAMPO = new Font("Roboto", Font.PLAIN, 14);
-    public static final Font FONTE_BOTAO = new Font("Roboto", Font.BOLD, 14);
-    public static final Font FONTE_MENU = new Font("Roboto", Font.PLAIN, 13);
+    public static final Font FONTE_LABEL = new Font("Ubuntu", Font.PLAIN, 14);
+    public static final Font FONTE_CAMPO = new Font("Ubuntu", Font.PLAIN, 16);
+    public static final Font FONTE_BOTAO = new Font("Ubuntu", Font.BOLD, 16);
+    public static final Font FONTE_MENU = new Font("Ubuntu", Font.PLAIN, 16);
 
     // Bordas
     private static final Border BORDA_CAMPO = BorderFactory.createLineBorder(COR_BORDA_CAMPO, 1, true);
@@ -107,7 +108,7 @@ public class GuiUtils {
         JButton botao = new JButton(texto);
         botao.setFont(FONTE_BOTAO);
         botao.setForeground(Color.WHITE);
-        botao.setBorder(new EmptyBorder(12, 24, 12, 24));
+        botao.setBorder(new EmptyBorder(8, 16, 8, 16));
         botao.setFocusPainted(false);
         botao.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
@@ -173,14 +174,14 @@ public class GuiUtils {
     public void aplicarTema() {
         try {
             UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-            UIManager.put("control", COR_FUNDO_TELA); // Azul claro (#BBDEFB)
-            UIManager.put("text", COR_TEXTO_LABEL); // Cinza escuro (#212121)
-            UIManager.put("nimbusBase", COR_PRIMARIA); // Azul escuro (#1976D2)
-            UIManager.put("nimbusSelectionBackground", COR_PRIMARIA); // Azul escuro (#1976D2)
-            UIManager.put("textField.disabledBackground", COR_CAMPO_DESABILITADO); // Azul muito claro (#E3F2FD)
-            UIManager.put("MenuBar.background", COR_MENU_FUNDO); // Azul médio (#42A5F5)
-            UIManager.put("Menu.foreground", COR_MENU_TEXTO); // Branco (#FFFFFF)
-            UIManager.put("MenuItem.foreground", COR_MENU_TEXTO); // Branco (#FFFFFF)
+            UIManager.put("control", COR_FUNDO_TELA);
+            UIManager.put("text", COR_TEXTO_LABEL);
+            UIManager.put("nimbusBase", COR_TERCIARIA);
+            UIManager.put("nimbusSelectionBackground", COR_TERCIARIA);
+            UIManager.put("textField.disabledBackground", COR_CAMPO_DESABILITADO);
+            UIManager.put("MenuBar.background", COR_MENU_FUNDO);
+            UIManager.put("Menu.foreground", COR_MENU_TEXTO);
+            UIManager.put("MenuItem.foreground", COR_MENU_TEXTO);
         } catch (Exception e) {
             System.err.println("Erro ao aplicar tema: " + e.getMessage());
         }
@@ -205,6 +206,7 @@ public class GuiUtils {
     public JMenuBar criarMenuBar(JFrame telaAtual, TelaPrincipal telaPrincipal) {
         JMenuBar menuBar = new JMenuBar();
         menuBar.setBackground(COR_MENU_FUNDO);
+        menuBar.setOpaque(false);
         menuBar.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         // Menu Arquivo

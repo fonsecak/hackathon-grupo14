@@ -2,6 +2,7 @@ package com.alfa.experience.gui;
 
 import com.alfa.experience.service.EventoService;
 import com.alfa.experience.service.PalestranteService;
+import com.alfa.experience.service.AlunoService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,17 +12,18 @@ import java.awt.event.WindowEvent;
 public class TelaPrincipal extends JFrame {
     private final EventoService eventoService;
     private final PalestranteService palestranteService;
-    //private final AlunoService alunoService;
+    private final AlunoService alunoService;
 
     // Variáveis para controlar as instâncias das telas
     private GerEventoGui gerEventoGui;
     private GerPalestranteGui gerPalestranteGui;
-    //private ListarAlunosGui listarAlunosGui;
+    private ListarAlunosGui listarAlunosGui;
 
 
-    public TelaPrincipal(EventoService eventoService, PalestranteService palestranteService) {
+    public TelaPrincipal(EventoService eventoService, PalestranteService palestranteService, AlunoService alunoService) {
         this.eventoService = eventoService;
         this.palestranteService = palestranteService;
+        this.alunoService = alunoService;
         //this.alunoService = alunoService;
         montarTelaInicial();
     }
@@ -79,16 +81,16 @@ public class TelaPrincipal extends JFrame {
         }
     }
 
-//    private void abrirListarAlunosGui() {
-//        if (listarAlunosGui == null || !listarAlunosGui.isVisible()) {
-//            listarAlunosGui = new ListarAlunosGui(alunoService);
-//            configurarFechamento(listarAlunosGui, () -> listarAlunosGui = null);
-//            listarAlunosGui.setVisible(true);
-//        } else {
-//            listarAlunosGui.toFront();
-//            listarAlunosGui.requestFocus();
-//        }
-//    }
+    private void abrirListarAlunosGui() {
+        if (listarAlunosGui == null || !listarAlunosGui.isVisible()) {
+            listarAlunosGui = new ListarAlunosGui(alunoService);
+            configurarFechamento(listarAlunosGui, () -> listarAlunosGui = null);
+            listarAlunosGui.setVisible(true);
+      } else {
+           listarAlunosGui.toFront();
+           listarAlunosGui.requestFocus();
+        }
+    }
 
     private void configurarFechamento(JFrame frame, Runnable onClose) {
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
