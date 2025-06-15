@@ -33,6 +33,14 @@ public class GuiUtils {
     private static final Border MARGEM_CAMPO = new EmptyBorder(8, 8, 8, 8);
     private static final Border BORDA_COMPOSTA = new CompoundBorder(BORDA_CAMPO, MARGEM_CAMPO);
 
+    public void montarTelaPadrao(JFrame frame, String titulo, Integer largura, Integer altura) {
+        frame.setTitle(titulo);
+        frame.setSize(largura, altura);
+        frame.setLocationRelativeTo(null);
+        frame.getContentPane().setBackground(COR_FUNDO_TELA);
+        aplicarIcone(frame);
+        aplicarTema();
+    }
 
     public GridBagConstraints montarConstraints(int x, int y) {
         return montarConstraints(x, y, 1, 0.0, GridBagConstraints.WEST);
@@ -50,13 +58,10 @@ public class GuiUtils {
         return constraint;
     }
 
-
-    public void montarTelaPadrao(JFrame frame, String titulo, Integer largura, Integer altura) {
-        frame.setTitle(titulo);
-        frame.setSize(largura, altura);
-        frame.setLocationRelativeTo(null);
-        frame.getContentPane().setBackground(COR_FUNDO_TELA);
-        aplicarTema();
+    public void aplicarIcone(JFrame frame) {
+        java.net.URL iconeURL = getClass().getResource("/img/logo.png");
+        ImageIcon icone = new ImageIcon(iconeURL);
+        frame.setIconImage(icone.getImage());
     }
 
     public JLabel criarLabel(String texto) {

@@ -18,7 +18,6 @@ public class TelaPrincipal extends JFrame {
     private GerPalestranteGui gerPalestranteGui;
     //private ListarAlunosGui listarAlunosGui;
 
-    private JButton btGerEventos, btListarAlunos, btGerPalestrantes;
 
     public TelaPrincipal(EventoService eventoService, PalestranteService palestranteService) {
         this.eventoService = eventoService;
@@ -34,12 +33,25 @@ public class TelaPrincipal extends JFrame {
         // Adicionar MenuBar
         setJMenuBar(guiUtils.criarMenuBar(this, this));
 
-        JLabel jlTitulo = new JLabel("Bem-vindo ao Sistema AlfaExperience", SwingConstants.CENTER);
-        jlTitulo.setFont(new Font("Arial", Font.BOLD, 20));
+        // Logo
+        JLabel jlLogo = new JLabel();
+        java.net.URL logoURL = getClass().getResource("/img/logo.png");
+        ImageIcon logo = new ImageIcon(logoURL);
+        Image imagem = logo.getImage().getScaledInstance(500, 350, Image.SCALE_SMOOTH);
+        jlLogo.setIcon(new ImageIcon(imagem));
 
-        JPanel painelPrincipal = new JPanel(new BorderLayout());
-       painelPrincipal.add(jlTitulo, BorderLayout.NORTH);
+        // Painel principal com logo
+        JPanel painelPrincipal = new JPanel(new GridBagLayout());
+        painelPrincipal.setBackground(GuiUtils.COR_FUNDO_TELA);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(20, 20, 20, 20);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.CENTER;
 
+        painelPrincipal.add(jlLogo, gbc);
         add(painelPrincipal);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
