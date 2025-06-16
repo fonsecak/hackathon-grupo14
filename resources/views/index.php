@@ -32,7 +32,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $_SESSION['user'] = $userData;
     header('Location: index.php'); // Redireciona diretamente para certificados
     exit;
-}
+  } else {
+    $erro = $resData['message'] ?? 'Erro ao fazer login. Verifique suas credenciais.';
+  }
 }
 ?>
 
