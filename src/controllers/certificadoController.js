@@ -9,7 +9,7 @@ const certificadoController = {
         .join('participantes as p', 'i.id_participante', 'p.id')
         .join('eventos as e', 'i.id_evento', 'e.id')
         .where('p.email', email)
-        .andWhere('p.status', 1) // status 1 = concluído
+        .andWhere('i.status', 1) // status 1 = concluído
         .select(
           'i.id', // ID da inscrição (pode usar para gerar certificado)
           'e.nome as evento',

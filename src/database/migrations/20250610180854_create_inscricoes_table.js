@@ -10,6 +10,7 @@ exports.up = function (knex) {
         table.integer('id_evento').unsigned().notNullable()
             .references('id').inTable('eventos').onDelete('CASCADE');
         table.timestamp('created_at').defaultTo(knex.fn.now());
+        table.boolean('status').defaultTo(false);
         table.unique(['id_participante', 'id_evento']); // Garantir que um participante só possa se inscrever uma vez em um evento
     });
 };
