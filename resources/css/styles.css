@@ -52,33 +52,6 @@ nav .nav-link i {
     font-size: 1.1rem;
 }
 
-/* Estilos para o formulário de pesquisa */
-nav .search-form {
-    margin: 0 2rem;
-    min-width: 300px;
-}
-
-nav .search-form .input-group {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-nav .search-form .form-control {
-    background: transparent;
-    border: none;
-    color: #f2f2f2 !important;
-    padding: 0.6rem 1rem;
-}
-
-nav .search-form .form-control::placeholder {
-    color: rgba(255, 255, 255, 0.5);
-}
-
-nav .search-form .form-control:focus {
-    box-shadow: none;
-    background: rgba(255, 255, 255, 0.15);
-}
 
 /* Estilos para os botões de ação */
 nav .btn-primary {
@@ -99,19 +72,6 @@ nav .navbar-text {
     color: #f2f2f2;
     font-weight: 500;
     margin-right: 1rem;
-}
-
-/* Estilos específicos para o botão de pesquisa */
-nav .search-form .btn-outline-light {
-    background: transparent !important;
-    border: none !important;
-    color: #f2f2f2 !important;
-    padding: 0.6rem 1rem;
-}
-
-nav .search-form .btn-outline-light:hover {
-    background: rgba(255, 255, 255, 0.1) !important;
-    color: #f2f2f2 !important;
 }
 
 /* Estilos específicos para o botão de logout */
@@ -170,11 +130,12 @@ footer ul li a {
 }
 
 footer a {
-    padding: 0px 15px;
+    padding: 10px 0px;
+    text-decoration: none;
 }
 
-footer h6 {
-    padding: 10px 0;
+.footerlinks{
+    color: #f2f2f2 !important;
 }
 
 main h2, .section-title, .main-section-title, .courses-section-title {
@@ -257,13 +218,13 @@ body::after {
     filter: blur(2px);
 }
 
-/* Garante que o conteúdo fique acima dos efeitos */
+
 main, .container, .card, nav, footer {
     position: relative;
     z-index: 1;
 }
 
-/* ====== CARDS DE EVENTO BONITOS E PROFISSIONAIS ====== */
+
 .event-card {
     border-radius: 18px;
     overflow: hidden;
@@ -295,7 +256,7 @@ main, .container, .card, nav, footer {
 .event-card img {
     height: 140px;
     object-fit: cover;
-    border-radius: 18px 18px 0 0;
+    border-radius: 4px 4px 0 0;
     transition: filter 0.2s;
     filter: brightness(0.98);
     width: 100%;

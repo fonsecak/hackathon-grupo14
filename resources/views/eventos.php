@@ -51,6 +51,7 @@ if ($filtro) {
   <div class="container py-5">
     <h2 class="mb-0 section-title">Explore nossos cursos.</h2>
     <div class="row g-3">
+      <div><br></div>
   <?php
   function renderBotaoCategoria($nome, $icone, $filtroAtual) {
     $ativo = ($filtroAtual === $nome) ? 'btn-primary text-white' : 'btn-light';

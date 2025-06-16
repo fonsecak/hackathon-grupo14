@@ -71,7 +71,7 @@ if ($httpcode !== 200) {
                                                 <td>' . htmlspecialchars($cert['evento']) . '</td>
                                                 <td>' . date('d/m/Y', strtotime($cert['data'])) . '</td>
                                                 <td>
-                                                    <a href="baixar_certificados.php?id=' . urlencode($cert['id']) . '" class="btn btn-primary btn-sm" target="_blank" aria-label="Baixar certificado">
+                                                    <a href="baixar_certificados.php?id=' . urlencode($cert['id']) . '" class="btn btn-sm" target="_blank" style="padding: 10px 20px;" aria-label="Baixar certificado" >
                                                         <i class="fa fa-download"></i> Baixar
                                                     </a>
                                                 </td>
