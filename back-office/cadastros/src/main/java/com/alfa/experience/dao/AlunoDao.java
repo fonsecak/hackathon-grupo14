@@ -17,21 +17,31 @@ public class AlunoDao extends Dao implements DaoInterface {
 
     @Override
     public boolean update(Object entity) {
-
         try {
             var aluno = (Aluno) entity;
-            var updateSql = "UPDATE inscricoes i " +
-                    "JOIN participantes p ON p.id = i.id_participante " +
-                    "SET i.status = ? " +
-                    "WHERE p.id = ? AND i.id_evento = ?";
+            var updateSql = "UPDATE inscricoes SET presenca = ? WHERE id_participante = ? AND id_evento = ?";
             var ps = getConnection().prepareStatement(updateSql);
-            ps.setString(1, aluno.getStatus());
+            ps.setBoolean(1, aluno.getPresenca() != null ? aluno.getPresenca() : false);
             ps.setLong(2, aluno.getId());
-            ps.setInt(3, 1); // Substitua por um parâmetro de evento dinâmico se necessário
+            ps.setInt(3, 1);
             int rowsAffected = ps.executeUpdate();
             return rowsAffected > 0;
         } catch (Exception e) {
             System.err.println("Erro ao atualizar status: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean atualizarPresencaInscricao(int idInscricao, Boolean presenca) {
+        try {
+            var updateSql = "UPDATE inscricoes SET presenca = ? WHERE id = ?";
+            var ps = getConnection().prepareStatement(updateSql);
+            ps.setBoolean(1, presenca != null ? presenca : false);
+            ps.setInt(2, idInscricao);
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (Exception e) {
+            System.err.println("Erro ao atualizar presenca: " + e.getMessage());
             return false;
         }
     }
@@ -51,13 +61,14 @@ public class AlunoDao extends Dao implements DaoInterface {
         return List.of();
     }
 
-    public List<Aluno> listarAlunosPorEvento(int idEvento) {
+    public List<Aluno> listarTodosAlunos(int idEvento) {
         List<Aluno> alunos = new ArrayList<>();
         Connection conn = getConnection();
         if (conn == null) return alunos;
 
-        String sql = "SELECT p.id, p.nome, p.sobrenome, p.cpf, p.email, p.senha, p.empresa, i.status " +
-                "FROM participantes p JOIN inscricoes i ON p.id = i.id_participante WHERE i.id_evento = ?";
+        String sql = "SELECT p.id, p.nome, p.sobrenome, p.cpf, p.email, p.senha, p.empresa, p.status, i.presenca, e.nome AS nome_evento " +
+                "FROM participantes p LEFT JOIN inscricoes i ON p.id = i.id_participante AND i.id_evento = ? " +
+                "LEFT JOIN eventos e ON i.id_evento = e.id";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, idEvento);
@@ -72,7 +83,9 @@ public class AlunoDao extends Dao implements DaoInterface {
                         rs.getString("email"),
                         rs.getString("senha"),
                         rs.getString("empresa"),
-                        rs.getString("status")
+                        rs.getString("status"),
+                        rs.getObject("presenca") != null ? rs.getBoolean("presenca") : null,
+                        rs.getString("nome_evento")
                 );
                 alunos.add(aluno);
             }
@@ -100,4 +113,22 @@ public class AlunoDao extends Dao implements DaoInterface {
         }
         return -1;
     }
+
+    public List<Integer> listarEventos() {
+        List<Integer> eventos = new ArrayList<>();
+        Connection conn = getConnection();
+        if (conn == null) return eventos;
+
+        String sql = "SELECT id FROM eventos";
+        try (PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                eventos.add(rs.getInt("id"));
+            }
+        } catch (Exception e) {
+            System.err.println("Erro ao listar eventos: " + e.getMessage());
+        }
+        return eventos;
+    }
+
 }

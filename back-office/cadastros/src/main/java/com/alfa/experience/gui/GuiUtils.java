@@ -11,7 +11,7 @@ import java.text.ParseException;
 public class GuiUtils {
 
     public static final Color COR_PRIMARIA = new Color(11, 62, 134);
-    public static final Color COR_TERCIARIA = new Color(56, 56, 56);
+    public static final Color COR_TERCIARIA = new Color(63, 63, 63);
     public static final Color COR_SECUNDARIA = new Color(54, 136, 201);
     public static final Color COR_PERIGO = new Color(162, 36, 36);
     public static final Color COR_FUNDO_TELA = new Color(241, 241, 241, 255);

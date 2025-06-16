@@ -9,8 +9,10 @@ public class Aluno {
     private String senha;
     private String empresa;
     private String status;
+    private Boolean presenca;
+    private String nomeEvento;
 
-    public Aluno(long id, String nome, String sobrenome, String cpf, String email, String senha, String empresa, String status) {
+    public Aluno(int id, String nome, String sobrenome, String cpf, String email, String senha, String empresa, String status, Boolean presenca, String nomeEvento) {
         this.id = id;
         this.nome = nome;
         this.sobrenome = sobrenome;
@@ -19,6 +21,15 @@ public class Aluno {
         this.senha = senha;
         this.empresa = empresa;
         this.status = status;
+        this.presenca = presenca;
+        this.nomeEvento = nomeEvento;
+    }
+
+    public String getNomeEvento() {
+        return nomeEvento;
+    }
+    public void setNomeEvento(String nomeEvento) {
+        this.nomeEvento = nomeEvento;
     }
 
     public long getId() {
@@ -85,7 +96,11 @@ public class Aluno {
         this.status = status;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public Boolean getPresenca() {
+        return presenca;
+    }
+
+    public void setPresenca(Boolean presenca) {
+        this.presenca = presenca;
     }
 }
