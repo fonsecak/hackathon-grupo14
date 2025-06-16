@@ -26,6 +26,7 @@ public class GerEventoGui extends JFrame {
 
     private final EventoService eventoService;
     private final PalestranteService palestranteService;
+    private final AlunoService alunoService;
     private final TelaPrincipal telaPrincipal;
 
     private JLabel jlId;
@@ -69,6 +70,7 @@ public class GerEventoGui extends JFrame {
             JOptionPane.showMessageDialog(null, "Erro: Serviços não inicializados.", "Erro", JOptionPane.ERROR_MESSAGE);
             throw new IllegalArgumentException("EventoService ou PalestranteService não podem ser nulos.");
         }
+        this.alunoService = alunoService;
         this.eventoService = eventoService;
         this.palestranteService = palestranteService;
         this.telaPrincipal = telaPrincipal;

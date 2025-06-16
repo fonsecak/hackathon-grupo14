@@ -82,7 +82,7 @@ public class TelaPrincipal extends JFrame {
 
     void abrirListarAlunosGui() {
         if (listarAlunosGui == null || !listarAlunosGui.isVisible()) {
-            listarAlunosGui = new ListarAlunosGui(alunoService);
+            listarAlunosGui = new ListarAlunosGui(alunoService, this);
             configurarFechamento(listarAlunosGui, () -> listarAlunosGui = null);
             listarAlunosGui.setVisible(true);
       } else {

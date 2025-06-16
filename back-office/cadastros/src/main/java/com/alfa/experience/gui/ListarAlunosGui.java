@@ -8,38 +8,61 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
+import java.util.Map;
 
 public class ListarAlunosGui extends JFrame {
+    private final TelaPrincipal telaPrincipal;
+
     private JComboBox<Integer> cbEventos;
     private JTable tabelaAlunos;
     private DefaultTableModel modeloTabela;
     private final AlunoService alunoService;
+    private Map<Integer, String> eventosMap;
 
-    public ListarAlunosGui(AlunoService alunoService) {
+    public ListarAlunosGui(AlunoService alunoService, TelaPrincipal telaPrincipal) {
         this.alunoService = alunoService;
+        this.telaPrincipal = telaPrincipal;
         inicializarComponentes();
         montarLayout();
         carregarEventos();
     }
 
     private void inicializarComponentes() {
+        var guiUtils = new GuiUtils();
+        setJMenuBar(guiUtils.criarMenuBar(this, telaPrincipal));
         setTitle("Listar Alunos");
         setSize(800, 400);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
         cbEventos = new JComboBox<>();
-        List<Integer> eventos = alunoService.listarEventos();
-        for (Integer idEvento : eventos) {
-            cbEventos.addItem(idEvento);
+        carregarEventosCombo(); // Preenche o JComboBox com IDs dos eventos
+        // Define o evento inicial (ex.: primeiro evento ou um específico)
+        if (cbEventos.getItemCount() > 0) {
+            cbEventos.setSelectedIndex(0); // Seleciona o primeiro evento por padrão
         }
         cbEventos.addActionListener(e -> atualizarTabela());
 
-        String[] colunas = {"ID", "Nome", "Sobrenome", "CPF", "Email", "Empresa", "Status", "Evento", "Presente?"};
+
+        // Renderer para exibir nomes em vez de IDs
+        cbEventos.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value instanceof Integer) {
+                    Integer eventId = (Integer) value;
+                    String eventName = eventosMap.get(eventId);
+                    setText(eventName != null ? eventName : "ID: " + eventId);
+                }
+                return this;
+            }
+        });
+
+        String[] colunas = {"ID", "Nome", "Sobrenome", "CPF", "Email", "Empresa", "Evento", "Presente?"};
         modeloTabela = new DefaultTableModel(colunas, 0) {
             @Override
             public Class<?> getColumnClass(int columnIndex) {
-                if (columnIndex == 8) return Boolean.class; // Coluna de checkbox
+                if (columnIndex == 7) return Boolean.class; // Coluna de checkbox
                 return super.getColumnClass(columnIndex);
             }
         };
@@ -64,7 +87,7 @@ public class ListarAlunosGui extends JFrame {
                 int idInscricao = alunoService.getIdInscricao((int) idAluno, idEvento);
                 if (idInscricao != -1) {
                     if (alunoService.atualizarPresenca(idInscricao, novaPresenca)) {
-                        modeloTabela.setValueAt(novaPresenca, row, 8);
+                        modeloTabela.setValueAt(novaPresenca, row, 7);
                     }else {
                             JOptionPane.showMessageDialog(ListarAlunosGui.this, "Falha ao atualizar presença.", "Erro", JOptionPane.ERROR_MESSAGE);
                         }
@@ -87,16 +110,40 @@ public class ListarAlunosGui extends JFrame {
     }
 
     private void carregarEventos() {
-        if (cbEventos.getItemCount() == 0) {
-            cbEventos.setSelectedIndex(-1); // Nenhum evento selecionado inicialmente
-        } else {
+        carregarEventosCombo();
+        if (cbEventos.getItemCount() > 0) {
             cbEventos.setSelectedIndex(0);
+            atualizarTabela();
         }
-        atualizarTabela();
+    }
+
+    private void carregarEventosCombo() {
+        cbEventos.removeAllItems();
+        eventosMap = alunoService.listarEventos();
+        if (eventosMap == null) {
+            System.err.println("Erro: eventosMap é null. Verifique a conexão ou a query.");
+            JOptionPane.showMessageDialog(this, "Não foi possível carregar os eventos. Verifique a conexão.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (eventosMap.isEmpty()) {
+            System.err.println("Nenhum evento encontrado no banco de dados.");
+            JOptionPane.showMessageDialog(this, "Nenhum evento cadastrado no banco de dados.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        for (Map.Entry<Integer, String> entry : eventosMap.entrySet()) {
+            Integer eventId = entry.getKey();
+            String eventName = entry.getValue();
+            System.out.println("Adicionando evento ID: " + eventId + ", Nome: " + eventName); // Depuração
+            cbEventos.addItem(eventId); // Adiciona o ID do evento
+        }
+    }
+
+    private int getSelectedEventId() {
+        return cbEventos.getSelectedItem() != null ? (Integer) cbEventos.getSelectedItem() : -1;
     }
 
     private void atualizarTabela() {
-        int idEvento = (int) cbEventos.getSelectedItem();
+        int idEvento = getSelectedEventId();
         if (idEvento == 0) return; // Evita processamento se nenhum evento válido
         modeloTabela.setRowCount(0);
         List<Aluno> alunos = alunoService.listarTodosAlunos(idEvento);
@@ -108,7 +155,6 @@ public class ListarAlunosGui extends JFrame {
                     aluno.getCpf(),
                     aluno.getEmail(),
                     aluno.getEmpresa(),
-                    aluno.getStatus() != null ? (aluno.getStatus().equals("1") ? "Ativo" : "Inativo") : "Não definido", // Mapeia status
                     aluno.getNomeEvento() != null ? aluno.getNomeEvento() : "Não inscrito",
                     aluno.getPresenca() != null ? aluno.getPresenca() : false
             };

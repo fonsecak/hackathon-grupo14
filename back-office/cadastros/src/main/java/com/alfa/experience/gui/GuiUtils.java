@@ -209,25 +209,8 @@ public class GuiUtils {
         menuBar.setOpaque(false);
         menuBar.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-        // Menu Arquivo
-        JMenu arquivoMenu = new JMenu("Arquivo");
-        arquivoMenu.setFont(FONTE_MENU);
-        arquivoMenu.setForeground(COR_MENU_TEXTO);
-
-        JMenuItem sairItem = new JMenuItem("Sair");
-        sairItem.setFont(FONTE_MENU);
-        sairItem.setForeground(COR_MENU_TEXTO);
-        sairItem.addActionListener(e -> {
-            if (telaAtual instanceof TelaPrincipal) {
-                System.exit(0);
-            } else {
-                telaAtual.dispose();
-            }
-        });
-        arquivoMenu.add(sairItem);
-
-        // Menu Navegação
-        JMenu navegacaoMenu = new JMenu("Navegação");
+        // Menu
+        JMenu navegacaoMenu = new JMenu("Menu");
         navegacaoMenu.setFont(FONTE_MENU);
         navegacaoMenu.setForeground(COR_MENU_TEXTO);
 
@@ -267,8 +250,25 @@ public class GuiUtils {
             }
         });
 
-        navegacaoMenu.add(eventosItem);
+        // Menu Sair
+        JMenu arquivoMenu = new JMenu("Programa");
+        arquivoMenu.setFont(FONTE_MENU);
+        arquivoMenu.setForeground(COR_MENU_TEXTO);
+
+        JMenuItem sairItem = new JMenuItem("Sair");
+        sairItem.setFont(FONTE_MENU);
+        sairItem.setForeground(COR_MENU_TEXTO);
+        sairItem.addActionListener(e -> {
+            if (telaAtual instanceof TelaPrincipal) {
+                System.exit(0);
+            } else {
+                telaAtual.dispose();
+            }
+        });
+        arquivoMenu.add(sairItem);
+
         navegacaoMenu.add(palestrantesItem);
+        navegacaoMenu.add(eventosItem);
         navegacaoMenu.add(alunosItem);
 
         // Menu Ajuda
@@ -282,9 +282,10 @@ public class GuiUtils {
         sobreItem.addActionListener(e -> exibirMensagem(telaAtual, "AlfaExperience v1.0\nDesenvolvido para Hackathon\nEquipe de 5 membros", "Sobre", JOptionPane.INFORMATION_MESSAGE));
         ajudaMenu.add(sobreItem);
 
-        menuBar.add(arquivoMenu);
+
         menuBar.add(navegacaoMenu);
         menuBar.add(ajudaMenu);
+        menuBar.add(arquivoMenu);
 
         return menuBar;
     }
