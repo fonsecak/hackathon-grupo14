@@ -13,8 +13,8 @@ public class AlunoService {
         this.dao = dao;
     }
 
-    public List<Aluno> listarTodosAlunos(int idEvento) {
-        return dao.listarTodosAlunos(idEvento);
+    public List<Aluno> listarAlunosPorEvento(int idEvento) {
+        return dao.listarAlunosPorEvento(idEvento);
     }
 
     public boolean atualizarPresenca(int idInscricao, Boolean presenca) {

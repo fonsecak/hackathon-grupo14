@@ -12,12 +12,12 @@ import java.util.Map;
 
 public class ListarAlunosGui extends JFrame {
     private final TelaPrincipal telaPrincipal;
-
-    private JComboBox<Integer> cbEventos;
+    private JComboBox<String> cbEventos; // Exibe nomes dos eventos
+    private JButton btnAtualizar; // Botão para atualizar a tabela
     private JTable tabelaAlunos;
     private DefaultTableModel modeloTabela;
     private final AlunoService alunoService;
-    private Map<Integer, String> eventosMap;
+    private Map<Integer, String> eventosMap; // Mapa para mapear ID para nome
 
     public ListarAlunosGui(AlunoService alunoService, TelaPrincipal telaPrincipal) {
         this.alunoService = alunoService;
@@ -36,27 +36,14 @@ public class ListarAlunosGui extends JFrame {
         setLocationRelativeTo(null);
 
         cbEventos = new JComboBox<>();
-        carregarEventosCombo(); // Preenche o JComboBox com IDs dos eventos
-        // Define o evento inicial (ex.: primeiro evento ou um específico)
-        if (cbEventos.getItemCount() > 0) {
-            cbEventos.setSelectedIndex(0); // Seleciona o primeiro evento por padrão
-        }
-        cbEventos.addActionListener(e -> atualizarTabela());
+        cbEventos.setFont(GuiUtils.FONTE_CAMPO);
+        cbEventos.setBackground(GuiUtils.COR_CAMPO_TEXTO);
+        cbEventos.setForeground(GuiUtils.COR_TEXTO_LABEL);
+        carregarEventosCombo();
 
+        btnAtualizar = guiUtils.criarBotao("Atualizar", "primario");
+        btnAtualizar.addActionListener(e -> atualizarTabela());
 
-        // Renderer para exibir nomes em vez de IDs
-        cbEventos.setRenderer(new DefaultListCellRenderer() {
-            @Override
-            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if (value instanceof Integer) {
-                    Integer eventId = (Integer) value;
-                    String eventName = eventosMap.get(eventId);
-                    setText(eventName != null ? eventName : "ID: " + eventId);
-                }
-                return this;
-            }
-        });
 
         String[] colunas = {"ID", "Nome", "Sobrenome", "CPF", "Email", "Empresa", "Evento", "Presente?"};
         modeloTabela = new DefaultTableModel(colunas, 0) {
@@ -66,31 +53,35 @@ public class ListarAlunosGui extends JFrame {
                 return super.getColumnClass(columnIndex);
             }
         };
+
         tabelaAlunos = new JTable(modeloTabela);
         tabelaAlunos.getColumn("Presente?").setCellRenderer(new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                 JCheckBox checkbox = new JCheckBox();
-                checkbox.setSelected((value != null && (Boolean) value));
+                checkbox.setSelected(value != null && (Boolean) value);
                 checkbox.setEnabled(true);
                 return checkbox;
             }
         });
+
 
         tabelaAlunos.getColumn("Presente?").setCellEditor(new DefaultCellEditor(new JCheckBox()) {
             @Override
             public boolean stopCellEditing() {
                 int row = tabelaAlunos.getEditingRow();
                 Boolean novaPresenca = (Boolean) getCellEditorValue();
-                long idAluno = (long) modeloTabela.getValueAt(row, 0);
-                int idEvento = (int) cbEventos.getSelectedItem();
+                long idAluno = (Long) modeloTabela.getValueAt(row, 0);
+                int idEvento = getSelectedEventId();
                 int idInscricao = alunoService.getIdInscricao((int) idAluno, idEvento);
                 if (idInscricao != -1) {
                     if (alunoService.atualizarPresenca(idInscricao, novaPresenca)) {
                         modeloTabela.setValueAt(novaPresenca, row, 7);
-                    }else {
-                            JOptionPane.showMessageDialog(ListarAlunosGui.this, "Falha ao atualizar presença.", "Erro", JOptionPane.ERROR_MESSAGE);
-                        }
+                    } else {
+                        JOptionPane.showMessageDialog(ListarAlunosGui.this, "Falha ao atualizar presença.", "Erro", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(ListarAlunosGui.this, "Inscrição não encontrada.", "Erro", JOptionPane.ERROR_MESSAGE);
                 }
                 return super.stopCellEditing();
             }
@@ -98,22 +89,23 @@ public class ListarAlunosGui extends JFrame {
         JScrollPane scrollPane = new JScrollPane(tabelaAlunos);
 
         JPanel panel = new JPanel(new BorderLayout());
-        panel.add(new JLabel("Selecione o Evento:"), BorderLayout.NORTH);
-        panel.add(cbEventos, BorderLayout.CENTER);
+        JPanel topPanel = new JPanel(new FlowLayout());
+        topPanel.add(new JLabel("Selecione o Evento:"));
+        topPanel.add(cbEventos);
+        topPanel.add(btnAtualizar);
+        panel.add(topPanel, BorderLayout.NORTH);
         panel.add(scrollPane, BorderLayout.CENTER);
         add(panel);
 
     }
 
     private void montarLayout() {
-
     }
 
     private void carregarEventos() {
         carregarEventosCombo();
         if (cbEventos.getItemCount() > 0) {
             cbEventos.setSelectedIndex(0);
-            atualizarTabela();
         }
     }
 
@@ -131,22 +123,34 @@ public class ListarAlunosGui extends JFrame {
             return;
         }
         for (Map.Entry<Integer, String> entry : eventosMap.entrySet()) {
-            Integer eventId = entry.getKey();
             String eventName = entry.getValue();
-            System.out.println("Adicionando evento ID: " + eventId + ", Nome: " + eventName); // Depuração
-            cbEventos.addItem(eventId); // Adiciona o ID do evento
+            if (eventName != null) {
+                System.out.println("Adicionando evento ID: " + entry.getKey() + ", Nome: " + eventName);
+                cbEventos.addItem(eventName);
+            }
         }
     }
 
     private int getSelectedEventId() {
-        return cbEventos.getSelectedItem() != null ? (Integer) cbEventos.getSelectedItem() : -1;
+        String selectedEventName = (String) cbEventos.getSelectedItem();
+        if (selectedEventName == null) return -1;
+        for (Map.Entry<Integer, String> entry : eventosMap.entrySet()) {
+            if (entry.getValue() != null && entry.getValue().equals(selectedEventName)) {
+                return entry.getKey();
+            }
+        }
+        return -1;
     }
+
 
     private void atualizarTabela() {
         int idEvento = getSelectedEventId();
-        if (idEvento == 0) return; // Evita processamento se nenhum evento válido
+        if (idEvento == -1) {
+            JOptionPane.showMessageDialog(this, "Selecione um evento válido.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         modeloTabela.setRowCount(0);
-        List<Aluno> alunos = alunoService.listarTodosAlunos(idEvento);
+        List<Aluno> alunos = alunoService.listarAlunosPorEvento(idEvento);
         for (Aluno aluno : alunos) {
             Object[] row = {
                     aluno.getId(),
@@ -159,6 +163,9 @@ public class ListarAlunosGui extends JFrame {
                     aluno.getPresenca() != null ? aluno.getPresenca() : false
             };
             modeloTabela.addRow(row);
+        }
+        if (alunos.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Nenhum aluno inscrito neste evento.", "Aviso", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 

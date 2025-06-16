@@ -63,14 +63,16 @@ public class AlunoDao extends Dao implements DaoInterface {
         return List.of();
     }
 
-    public List<Aluno> listarTodosAlunos(int idEvento) {
+    public List<Aluno> listarAlunosPorEvento(int idEvento) {
         List<Aluno> alunos = new ArrayList<>();
         Connection conn = getConnection();
         if (conn == null) return alunos;
 
-        String sql = "SELECT p.id, p.nome, p.sobrenome, p.cpf, p.email, p.senha, p.empresa, p.status, i.status, e.nome AS nome_evento " +
-                "FROM participantes p LEFT JOIN inscricoes i ON p.id = i.id_participante AND i.id_evento = ? " +
-                "LEFT JOIN eventos e ON i.id_evento = e.id";
+        String sql = "SELECT p.id, p.nome, p.sobrenome, p.cpf, p.email, p.senha, p.empresa, p.status AS participante_status, i.status AS inscricao_status, e.nome AS nome_evento " +
+                "FROM participantes p " +
+                "INNER JOIN inscricoes i ON p.id = i.id_participante " +
+                "INNER JOIN eventos e ON i.id_evento = e.id " +
+                "WHERE i.id_evento = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, idEvento);
@@ -85,8 +87,8 @@ public class AlunoDao extends Dao implements DaoInterface {
                         rs.getString("email"),
                         rs.getString("senha"),
                         rs.getString("empresa"),
-                        rs.getString("status"),
-                        rs.getObject("i.status") != null ? rs.getBoolean("i.status") : null,
+                        rs.getString("participante_status"),
+                        rs.getObject("inscricao_status") != null ? rs.getBoolean("inscricao_status") : null,
                         rs.getString("nome_evento")
                 );
                 alunos.add(aluno);
@@ -119,13 +121,22 @@ public class AlunoDao extends Dao implements DaoInterface {
     public Map<Integer, String> listarEventos() {
         Map<Integer, String> eventos = new HashMap<>();
         Connection conn = getConnection();
-        if (conn == null) return eventos;
+        if (conn == null) {
+            System.err.println("Conexão nula ao listar eventos.");
+            return eventos;
+        }
 
-        String sql = "SELECT id, nome FROM eventos";
+        String sql = "SELECT DISTINCT id, nome FROM eventos";
         try (PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                eventos.put(rs.getInt("id"), rs.getString("nome"));
+                int id = rs.getInt("id");
+                String nome = rs.getString("nome");
+                if (!eventos.containsKey(id)) {
+                    eventos.put(id, nome != null ? nome : "Sem nome");
+                } else {
+                    System.err.println("Evento duplicado detectado: ID " + id + ", Nome: " + nome);
+                }
             }
         } catch (Exception e) {
             System.err.println("Erro ao listar eventos: " + e.getMessage());
