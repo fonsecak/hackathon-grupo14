@@ -3,6 +3,7 @@ package com.alfa.experience.service;
 import com.alfa.experience.dao.AlunoDao;
 import com.alfa.experience.model.Aluno;
 import java.util.List;
+import java.util.Map;
 
 public class AlunoService {
 
@@ -24,7 +25,7 @@ public class AlunoService {
         return dao.getIdInscricao(idAluno, idEvento);
     }
 
-    public List<Integer> listarEventos() {
+    public Map<Integer, String> listarEventos() {
         return dao.listarEventos();
     }
 }

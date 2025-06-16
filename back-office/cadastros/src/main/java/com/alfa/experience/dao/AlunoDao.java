@@ -6,7 +6,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AlunoDao extends Dao implements DaoInterface {
 
@@ -19,7 +21,7 @@ public class AlunoDao extends Dao implements DaoInterface {
     public boolean update(Object entity) {
         try {
             var aluno = (Aluno) entity;
-            var updateSql = "UPDATE inscricoes SET presenca = ? WHERE id_participante = ? AND id_evento = ?";
+            var updateSql = "UPDATE inscricoes SET status = ? WHERE id_participante = ? AND id_evento = ?";
             var ps = getConnection().prepareStatement(updateSql);
             ps.setBoolean(1, aluno.getPresenca() != null ? aluno.getPresenca() : false);
             ps.setLong(2, aluno.getId());
@@ -34,14 +36,14 @@ public class AlunoDao extends Dao implements DaoInterface {
 
     public boolean atualizarPresencaInscricao(int idInscricao, Boolean presenca) {
         try {
-            var updateSql = "UPDATE inscricoes SET presenca = ? WHERE id = ?";
+            var updateSql = "UPDATE inscricoes SET status = ? WHERE id = ?";
             var ps = getConnection().prepareStatement(updateSql);
             ps.setBoolean(1, presenca != null ? presenca : false);
             ps.setInt(2, idInscricao);
             int rowsAffected = ps.executeUpdate();
             return rowsAffected > 0;
         } catch (Exception e) {
-            System.err.println("Erro ao atualizar presenca: " + e.getMessage());
+            System.err.println("Erro ao atualizar status: " + e.getMessage());
             return false;
         }
     }
@@ -66,7 +68,7 @@ public class AlunoDao extends Dao implements DaoInterface {
         Connection conn = getConnection();
         if (conn == null) return alunos;
 
-        String sql = "SELECT p.id, p.nome, p.sobrenome, p.cpf, p.email, p.senha, p.empresa, p.status, i.presenca, e.nome AS nome_evento " +
+        String sql = "SELECT p.id, p.nome, p.sobrenome, p.cpf, p.email, p.senha, p.empresa, p.status, i.status, e.nome AS nome_evento " +
                 "FROM participantes p LEFT JOIN inscricoes i ON p.id = i.id_participante AND i.id_evento = ? " +
                 "LEFT JOIN eventos e ON i.id_evento = e.id";
 
@@ -84,7 +86,7 @@ public class AlunoDao extends Dao implements DaoInterface {
                         rs.getString("senha"),
                         rs.getString("empresa"),
                         rs.getString("status"),
-                        rs.getObject("presenca") != null ? rs.getBoolean("presenca") : null,
+                        rs.getObject("i.status") != null ? rs.getBoolean("i.status") : null,
                         rs.getString("nome_evento")
                 );
                 alunos.add(aluno);
@@ -114,16 +116,16 @@ public class AlunoDao extends Dao implements DaoInterface {
         return -1;
     }
 
-    public List<Integer> listarEventos() {
-        List<Integer> eventos = new ArrayList<>();
+    public Map<Integer, String> listarEventos() {
+        Map<Integer, String> eventos = new HashMap<>();
         Connection conn = getConnection();
         if (conn == null) return eventos;
 
-        String sql = "SELECT id FROM eventos";
+        String sql = "SELECT id, nome FROM eventos";
         try (PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                eventos.add(rs.getInt("id"));
+                eventos.put(rs.getInt("id"), rs.getString("nome"));
             }
         } catch (Exception e) {
             System.err.println("Erro ao listar eventos: " + e.getMessage());
