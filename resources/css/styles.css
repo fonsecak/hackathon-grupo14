@@ -1235,7 +1235,7 @@ body.evento-detalhe {
 
 /* --- Meus Eventos Table & Card (Estética Final - Implementação) --- */
 body.meus-eventos-bg, .meus-eventos-bg main {
-    background: linear-gradient(135deg, #f0f4f8 0%, #e8edf3 100%) !important; /* Fundo suave com gradiente */
+    background: linear-gradient(135deg, #f1f3f5 0%, #e8edf3 100%) !important; /* Fundo suave com gradiente */
 }
 
 .meus-eventos-card {
