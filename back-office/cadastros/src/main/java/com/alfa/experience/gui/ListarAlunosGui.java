@@ -11,20 +11,25 @@ import java.util.List;
 import java.util.Map;
 
 public class ListarAlunosGui extends JFrame {
+    private final TelaPrincipal telaPrincipal;
+
     private JComboBox<Integer> cbEventos;
     private JTable tabelaAlunos;
     private DefaultTableModel modeloTabela;
     private final AlunoService alunoService;
     private Map<Integer, String> eventosMap;
 
-    public ListarAlunosGui(AlunoService alunoService) {
+    public ListarAlunosGui(AlunoService alunoService, TelaPrincipal telaPrincipal) {
         this.alunoService = alunoService;
+        this.telaPrincipal = telaPrincipal;
         inicializarComponentes();
         montarLayout();
         carregarEventos();
     }
 
     private void inicializarComponentes() {
+        var guiUtils = new GuiUtils();
+        setJMenuBar(guiUtils.criarMenuBar(this, telaPrincipal));
         setTitle("Listar Alunos");
         setSize(800, 400);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
