@@ -9,14 +9,14 @@
                 </div>
             </div>
 
-            <div class="col-4 col-md-4 mb-3 mb-md-0">                  
-                <h6 class="fw-bold">Eventos</h6>                                 
-                <h6 class="fw-bold">Certificados</h6>               
-                <h6 class="fw-bold">Contato</h6>                                  
+            <div class="col-4 col-md-4 mb-3 mb-md-0 d-flex flex-column align-items-center">                  
+                <a class="footerlinks fw-bold mb-2" href="index.php">Eventos</a>                                 
+                <a class="footerlinks fw-bold mb-2" href="certificado.php">Certificados</a>               
+                <a class="footerlinks fw-bold" href="meus_eventos.php">Meus Eventos</a>                                  
             </div>
 
             <!-- Redes sociais -->
-            <div class="col-4 col-md-4 redes-sociais d-flex justify-content-center justify-content-md-end">
+            <div class="col-4 col-md-4 redes-sociais d-flex flex-column justify-content-center justify-content-md-end">
                 <a href="https://wa.me/seunumerowhatsapp" target="_blank" class="footer-link fs-4" title="WhatsApp">
                     <i class="fab fa-whatsapp"></i>
                 </a>

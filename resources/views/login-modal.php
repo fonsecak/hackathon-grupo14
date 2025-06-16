@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Login Modal</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 </head>
 <body>
   <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
@@ -23,9 +24,6 @@
               <label for="senha" class="form-label">Senha</label>
               <input type="password" class="form-control" name="senha" id="senha" required placeholder="Digite sua senha">
             </div>
-            <?php if (!empty($erro)): ?>
-              <div id="loginError" class="text-danger"><?php echo htmlspecialchars($erro); ?></div>
-            <?php endif; ?>
           </div>
           <div class="modal-footer">
             <button type="submit" class="btn btn-primary">Entrar</button>
@@ -34,6 +32,23 @@
       </div>
     </div>
   </div>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+  <script>
+    // Configurações do Toastr
+    toastr.options = {
+      "closeButton": true,
+      "progressBar": true,
+      "positionClass": "toast-top-right",
+      "timeOut": "3000"
+    };
+
+    <?php if (!empty($erro)): ?>
+    $(document).ready(function() {
+      toastr.error('<?php echo htmlspecialchars($erro); ?>');
+    });
+    <?php endif; ?>
+  </script>
 </body>
 </html>

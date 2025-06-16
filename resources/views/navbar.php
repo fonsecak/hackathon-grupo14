@@ -22,12 +22,7 @@ if (session_status() === PHP_SESSION_NONE) {
                         <a class="nav-link active" href="certificado.php"><i class="fas fa-award me-1"></i> Certificado</a>
                     </li>
                 </ul>
-                <form class="d-flex search-form" method="GET" action="eventos.php">
-                    <div class="input-group">
-                        <input type="text" class="form-control search-input" name="q" placeholder="Pesquisar eventos...">
-                        <button class="btn btn-outline-light" type="submit"><i class="fas fa-search"></i></button>
-                    </div>
-                </form>
+                
 
                 <?php if (!isset($_SESSION['user'])): ?>
                     <!-- Botão de Login -->
