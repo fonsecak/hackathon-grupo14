@@ -51,6 +51,18 @@ const inscricaoController = {
     } catch (error) {
       return res.status(500).json({ error: 'Erro ao verificar inscrição.', details: error.message });
     }
+  },
+  async listarPorParticipante(req, res) {
+    try {
+      const { id_participante } = req.params;
+      if (!id_participante) {
+        return res.status(400).json({ error: 'id_participante é obrigatório.' });
+      }
+      const inscricoes = await knex('inscricoes').where({ id_participante });
+      return res.status(200).json(inscricoes);
+    } catch (error) {
+      return res.status(500).json({ error: 'Erro ao buscar inscrições.', details: error.message });
+    }
   }
 };
 

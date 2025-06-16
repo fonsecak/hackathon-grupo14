@@ -327,7 +327,7 @@ main, .container, .card, nav, footer {
 
 .event-card .price {
     font-weight: bold;
-    color: #1de9b6;
+    color: #1a8449;
     margin-bottom: 0.7rem;
     font-size: 1.08rem;
 }
@@ -728,7 +728,7 @@ body.cadastro-page {
 .evento-detalhe .preco-promocional {
     font-size: 2.2rem;
     font-weight: bold;
-    color: #000000;
+    color: #1a8449;
     margin-right: 10px;
 }
 
@@ -1157,7 +1157,7 @@ body.evento-detalhe {
 .evento-detalhe .preco-promocional {
     font-size: 2rem;
     font-weight: bold;
-    color: #0e84b3;
+    color: #1a8449;
     margin-right: 10px;
 }
 
@@ -1232,3 +1232,211 @@ body.evento-detalhe {
     margin-right: 0.5em;
     font-size: 1.1em;
 }
+
+/* --- Meus Eventos Table & Card (Estética Final - Implementação) --- */
+body.meus-eventos-bg, .meus-eventos-bg main {
+    background: linear-gradient(135deg, #f1f3f5 0%, #e8edf3 100%) !important; /* Fundo suave com gradiente */
+}
+
+.meus-eventos-card {
+    max-width: 1200px;
+    margin: 4rem auto;
+    border-radius: 30px; /* Cantos super arredondados */
+    box-shadow: 0 25px 80px 0 rgba(20, 35, 70, 0.15); /* Sombra difusa e elegante */
+    border: none;
+    background: #fff;
+    overflow: hidden;
+    transition: all 0.4s ease-in-out; /* Transição suave */
+}
+
+.meus-eventos-card:hover {
+    transform: translateY(-5px); /* Efeito de elevação sutil */
+    box-shadow: 0 35px 90px 0 rgba(20, 35, 70, 0.22);
+}
+
+.meus-eventos-card .card-body {
+    padding: 4.5rem 4.5rem; /* Padding generoso para espaçamento */
+}
+
+.meus-eventos-table {
+    width: 100%;
+    background: #fff;
+    border-radius: 20px; /* Arredondamento da tabela */
+    box-shadow: 0 10px 40px 0 rgba(25, 40, 90, 0.08);
+    overflow: hidden;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-family: 'Inter', sans-serif; /* Fonte moderna */
+    color: #444;
+    margin-bottom: 0;
+}
+
+.meus-eventos-table thead {
+    background: linear-gradient(90deg, #0b2545 0%, #1976d2 100%); /* Gradiente forte para o cabeçalho */
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.15rem;
+    letter-spacing: 1.5px; /* Maior espaçamento para elegância */
+    text-transform: uppercase;
+}
+
+.meus-eventos-table th, .meus-eventos-table td {
+    padding: 1.8rem 2.2rem; /* Padding espaçoso */
+    vertical-align: middle;
+    border: none;
+    text-align: center; /* Centraliza todo o conteúdo */
+    background: none;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+/* Remove o alinhamento à esquerda da primeira coluna */
+.meus-eventos-table th:first-child, .meus-eventos-table td:first-child {
+    text-align: center;
+}
+
+.meus-eventos-table tbody tr {
+    border-bottom: 1px solid #eef2f9; /* Linhas divisórias muito suaves */
+    transition: background 0.3s ease-in-out, box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.meus-eventos-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.meus-eventos-table tbody tr:hover {
+    background: #fdfefe; /* Fundo de hover quase branco */
+    box-shadow: 0 0 20px rgba(25, 118, 210, 0.08); /* Sombra sutil no hover da linha */
+    transform: translateY(-3px); /* Efeito de elevação suave */
+}
+
+.meus-eventos-table .badge {
+    font-size: 0.9rem;
+    padding: 0.8em 1.6em;
+    border-radius: 30px;
+    font-weight: 700;
+    background: linear-gradient(45deg, #28a745 0%, #218838 100%);
+    color: #fff;
+    box-shadow: 0 6px 25px 0 rgba(40, 167, 69, 0.35);
+    display: inline-block; /* Garante que o badge fique centralizado */
+    min-width: 120px; /* Largura mínima para consistência */
+}
+
+.meus-eventos-table .btn {
+    padding: 0.9em 2em; /* Padding maior para botões */
+    font-size: 0.95rem;
+    border-radius: 30px; /* Botões mais arredondados */
+    font-weight: 600;
+    box-shadow: 0 7px 25px 0 rgba(25, 118, 210, 0.35); /* Sombra mais intensa */
+    border: none;
+    background: linear-gradient(45deg, #1976d2 0%, #1251a3 100%); /* Gradiente azul para botões */
+    color: #fff;
+    transition: all 0.35s ease-in-out;
+    display: inline-flex; /* Usa flexbox para alinhamento */
+    align-items: center; /* Centraliza verticalmente */
+    justify-content: center; /* Centraliza horizontalmente */
+    min-width: 120px; /* Largura mínima para consistência */
+    height: 40px; /* Altura fixa para consistência */
+}
+
+.meus-eventos-table .btn:hover {
+    transform: translateY(-5px); /* Efeito de elevação mais acentuado */
+    box-shadow: 0 12px 35px 0 rgba(25, 118, 210, 0.6);
+}
+
+/* Responsividade para a tabela */
+@media (max-width: 992px) {
+    .meus-eventos-card {
+        border-radius: 25px;
+        margin: 2rem auto;
+    }
+    .meus-eventos-card .card-body {
+        padding: 3.5rem 3rem;
+    }
+    .meus-eventos-table th, .meus-eventos-table td {
+        padding: 1.5rem 1.5rem;
+        font-size: 0.95rem;
+    }
+    .meus-eventos-table thead {
+        font-size: 1.05rem;
+    }
+    .meus-eventos-table .btn {
+        min-width: 110px;
+        height: 38px;
+        padding: 0.8em 1.8em;
+    }
+    .meus-eventos-table .badge {
+        min-width: 110px;
+        padding: 0.7em 1.4em;
+    }
+}
+
+@media (max-width: 768px) {
+    .meus-eventos-card {
+        box-shadow: none;
+        border-radius: 0;
+        margin: 1rem auto;
+    }
+    .meus-eventos-card .card-body {
+        padding: 2.5rem 1.5rem;
+    }
+    .meus-eventos-table {
+        box-shadow: none;
+        border-radius: 0;
+    }
+    .meus-eventos-table th, .meus-eventos-table td {
+        padding: 1.2rem 1rem;
+        font-size: 0.9rem;
+    }
+    .meus-eventos-table .badge, .meus-eventos-table .btn {
+        padding: 0.6em 1.2em;
+        font-size: 0.85rem;
+    }
+    .meus-eventos-table .btn {
+        min-width: 100px;
+        height: 36px;
+        padding: 0.7em 1.4em;
+    }
+    .meus-eventos-table .badge {
+        min-width: 100px;
+        padding: 0.6em 1.2em;
+        font-size: 0.85rem;
+    }
+}
+
+/* Estilo para o título da página */
+.meus-eventos-card .section-title {
+    font-size: 3rem; /* Título grande e impactante */
+    font-weight: 900; /* Mais bold */
+    color: #022840; /* Cor padrão do site para títulos */
+    margin-bottom: 4rem; /* Mais espaçamento */
+    text-shadow: 0 5px 20px rgba(14, 132, 179, 0.08); /* Sombra padrão do site */
+}
+
+.meus-eventos-card .section-title::after {
+    content: '';
+    display: block;
+    width: 100px; /* Linha maior e mais grossa */
+    height: 7px;
+    background: linear-gradient(90deg, #1a1832 0%, #1976d2 100%); /* Gradiente padrão do site */
+    margin: 1.8rem auto 0 auto;
+    border-radius: 5px;
+}
+
+/* Botão Voltar para Início na página Meus Eventos */
+.meus-eventos-card .btn-primary.px-5 {
+    background: #005991 !important; /* Cor padrão do site para botões */
+    border: none;
+    color: #f2f2f2 !important;
+    font-weight: 700;
+    box-shadow: 0 10px 30px rgba(0, 89, 145, 0.3);
+    transition: all 0.4s ease-in-out;
+}
+
+.meus-eventos-card .btn-primary.px-5:hover {
+    background: #004d7a !important; /* Cor mais escura no hover */
+    transform: translateY(-6px);
+    box-shadow: 0 15px 40px rgba(0, 89, 145, 0.4);
+}
+
+/* --- Fim Meus Eventos Table & Card (Estética Final - Implementação) --- */
