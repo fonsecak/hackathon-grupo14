@@ -49,6 +49,9 @@ if (session_status() === PHP_SESSION_NONE) {
                             </span>
                         </li>
                         <li class="nav-item ms-3">
+                            <a class="btn btn-outline-light" href="meus_eventos.php"><i class="fas fa-calendar-check me-1"></i> Meus Eventos</a>
+                        </li>
+                        <li class="nav-item ms-3">
                             <a class="btn btn-outline-light" href="logout.php"><i class="fas fa-sign-out-alt me-1"></i> Sair</a>
                         </li>
                     </ul>
