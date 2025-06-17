@@ -120,7 +120,6 @@ public class ListarAlunosGui extends JFrame {
         for (Map.Entry<Integer, String> entry : eventosMap.entrySet()) {
             String eventName = entry.getValue();
             if (eventName != null) {
-                System.out.println("Adicionando evento ID: " + entry.getKey() + ", Nome: " + eventName);
                 cbEventos.addItem(eventName);
             }
         }
