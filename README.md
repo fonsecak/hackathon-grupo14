@@ -36,32 +36,56 @@ https://www.figma.com/design/65wSlUl60gegzXIDbu8kP0/UX-Hackaton-Equipe-14?node-i
 ### Estrutura Back-Office
 
 src/
+
 └── main/
+
     └── java/
+    
         └── com/alfa/experience/
+        
             ├── dao/
+            
             │   ├── AlunoDao.java
+            
             │   ├── Dao.java
+            
             │   ├── DaoInterface.java
+            
             │   ├── EventoDao.java
+            
             │   └── PalestranteDao.java
+            
             │
             ├── gui/
+            
             │   ├── GerEventoGui.java
+            
             │   ├── GerPalestranteGui.java
+            
             │   ├── GuiUtils.java
+            
             │   ├── ListarAlunosGui.java
+            
             │   └── TelaPrincipal.java
             │
+            
             ├── model/
+            
             │   ├── Aluno.java
+            
             │   ├── Evento.java
+            
             │   └── Palestrante.java
+            
             │
             ├── service/
+            
             │   ├── AlunoService.java
+            
             │   ├── EventoService.java
+            
             │   └── PalestranteService.java
+            
             │
             └── Main.java
 
