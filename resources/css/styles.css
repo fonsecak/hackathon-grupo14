@@ -1428,8 +1428,8 @@ body.meus-eventos-bg, .meus-eventos-bg main {
     overflow: hidden;
 }
 .certificado-inner {
-    background: #ffffff;
-    padding: 20px 40px !important;
+    background: #fff;
+    padding: 40px 60px;
     height: 100%;
     border-radius: 10px;
     position: relative;
@@ -1440,10 +1440,7 @@ body.meus-eventos-bg, .meus-eventos-bg main {
     align-items: center;
     min-height: 100%;
 }
-.logo {
-    text-align: center;
-    margin-bottom: 10px;
-}
+.logo { margin-bottom: 10px; }
 .titulo {
     font-size: 32px;
     color: #0e84b3;
@@ -1451,7 +1448,6 @@ body.meus-eventos-bg, .meus-eventos-bg main {
     margin: 10px 0 20px 0;
     text-transform: uppercase;
     letter-spacing: 2px;
-    position: relative;
 }
 .conteudo {
     font-size: 18px;
@@ -1492,7 +1488,6 @@ body.meus-eventos-bg, .meus-eventos-bg main {
     pointer-events: none;
     z-index: 0;
 }
-
 .btn-download-certificado {
     display: inline-block;
     margin: 30px auto 0 auto;
@@ -1511,4 +1506,4 @@ body.meus-eventos-bg, .meus-eventos-bg main {
 .btn-download-certificado:hover {
     background: #022840;
     color: #fff;
-} 
+}
