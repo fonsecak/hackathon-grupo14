@@ -67,13 +67,15 @@ if ($httpcode !== 200) {
                                     <?php
                                     if (is_array($certificados) && count($certificados) > 0) {
                                         foreach ($certificados as $cert) {
-                                            echo '<tr>
-                                                <td>' . htmlspecialchars($cert['evento']) . '</td>
-                                                <td>' . date('d/m/Y', strtotime($cert['data'])) . '</td>
-                                                <td>
-                                                    <a href="baixar_certificados.php?id=' . urlencode($cert['id']) . '" class="btn btn-primary btn-sm" target="_blank" aria-label="Baixar certificado">
-                                                        <i class="fa fa-download"></i> Baixar
-                                                    </a>
+                                            echo '<tr class="align-middle">
+                                                <td class="align-middle">' . htmlspecialchars($cert['evento']) . '</td>
+                                                <td class="align-middle">' . date('d/m/Y', strtotime($cert['data'])) . '</td>
+                                                <td class="text-center align-middle pb-4">
+                                                    <div class="certificado-actions">
+                                                        <a href="gerar_pdf_certificado.php?id=' . urlencode($cert['id']) . '" class="btn-download-certificado">
+                                                            <i class="fas fa-download"></i> Baixar
+                                                        </a>
+                                                    </div>
                                                 </td>
                                             </tr>';
                                         }
