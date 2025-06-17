@@ -1413,3 +1413,102 @@ body.meus-eventos-bg, .meus-eventos-bg main {
 #toast-container > div.toast-error:hover {
     box-shadow: 0 6px 16px rgba(220, 53, 69, 0.4) !important;
 }
+
+/* CSS para o certificado gerado em PDF */
+.certificado {
+    text-align: center;
+    font-family: helvetica;
+    color: #022840;
+    background: #e8f4f8;
+    padding: 0;
+    position: relative;
+    height: 180mm;
+    border: 15px solid #0e84b3;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+.certificado-inner {
+    background: #ffffff;
+    padding: 20px 40px !important;
+    height: 100%;
+    border-radius: 10px;
+    position: relative;
+    box-shadow: 0 0 20px rgba(14, 132, 179, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100%;
+}
+.logo {
+    text-align: center;
+    margin-bottom: 10px;
+}
+.titulo {
+    font-size: 32px;
+    color: #0e84b3;
+    font-weight: bold;
+    margin: 10px 0 20px 0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    position: relative;
+}
+.conteudo {
+    font-size: 18px;
+    color: #022840;
+    margin: 10px 0 30px 0;
+    line-height: 1.6;
+}
+.conteudo strong {
+    color: #0e84b3;
+    font-size: 22px;
+    display: block;
+    margin: 8px 0;
+}
+.assinatura {
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 2px solid #0e84b3;
+}
+.assinatura p {
+    margin: 5px 0;
+    font-size: 13px;
+    color: #0e84b3;
+}
+.assinatura p:first-child {
+    font-size: 15px;
+    color: #022840;
+    font-weight: bold;
+}
+.watermark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-20deg);
+    font-size: 48px;
+    color: rgba(14, 132, 179, 0.07);
+    font-weight: bold;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.btn-download-certificado {
+    display: inline-block;
+    margin: 30px auto 0 auto;
+    padding: 12px 32px;
+    background: #0e84b3;
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    text-align: center;
+    text-decoration: none;
+    transition: background 0.2s;
+    box-shadow: 0 2px 8px rgba(14,132,179,0.08);
+}
+.btn-download-certificado:hover {
+    background: #022840;
+    color: #fff;
+} 
