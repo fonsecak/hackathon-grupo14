@@ -22,18 +22,16 @@ public class ListarAlunosGui extends JFrame {
     public ListarAlunosGui(AlunoService alunoService, TelaPrincipal telaPrincipal) {
         this.alunoService = alunoService;
         this.telaPrincipal = telaPrincipal;
-        inicializarComponentes();
-        montarLayout();
+        mostrarTela();
         carregarEventos();
     }
 
-    private void inicializarComponentes() {
+    private void mostrarTela() {
         var guiUtils = new GuiUtils();
-        setJMenuBar(guiUtils.criarMenuBar(this, telaPrincipal));
-        setTitle("Listar Alunos");
-        setSize(800, 400);
+        guiUtils.montarTelaPadrao(this, "Listar Alunos  - AlfaExperience", 800, 600);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(null);
+
+        setJMenuBar(guiUtils.criarMenuBar(this, telaPrincipal));
 
         cbEventos = new JComboBox<>();
         cbEventos.setFont(GuiUtils.FONTE_CAMPO);
@@ -99,9 +97,6 @@ public class ListarAlunosGui extends JFrame {
 
     }
 
-    private void montarLayout() {
-    }
-
     private void carregarEventos() {
         carregarEventosCombo();
         if (cbEventos.getItemCount() > 0) {
@@ -125,7 +120,6 @@ public class ListarAlunosGui extends JFrame {
         for (Map.Entry<Integer, String> entry : eventosMap.entrySet()) {
             String eventName = entry.getValue();
             if (eventName != null) {
-                System.out.println("Adicionando evento ID: " + entry.getKey() + ", Nome: " + eventName);
                 cbEventos.addItem(eventName);
             }
         }
