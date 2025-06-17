@@ -72,7 +72,8 @@ public class AlunoDao extends Dao implements DaoInterface {
                 "FROM participantes p " +
                 "INNER JOIN inscricoes i ON p.id = i.id_participante " +
                 "INNER JOIN eventos e ON i.id_evento = e.id " +
-                "WHERE i.id_evento = ?";
+                "WHERE i.id_evento = ? " +
+                "ORDER BY p.nome ASC";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, idEvento);
