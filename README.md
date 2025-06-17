@@ -65,3 +65,29 @@ https://www.figma.com/design/65wSlUl60gegzXIDbu8kP0/UX-Hackaton-Equipe-14?node-i
             │
             └── Main.java
 ---
+
+### Resources
+
+
+           resources/
+           ├── css/
+           │ └── styles.css
+           │
+           ├── img/
+           │ ├── eventoteste.png
+           │ ├── eventoteste2.png
+           │ └── logo.png
+           │
+           └── views/
+           ├── cadastro.php
+           ├── certificado.php
+           ├── eventodetalhe.php
+           ├── eventos.php
+           ├── footer.php
+           ├── gerar_pdf_certificado.php
+           ├── index.php
+           ├── login-modal.php
+           ├── logout.php
+           ├── meus_eventos.php
+           └── navbar.php
+
