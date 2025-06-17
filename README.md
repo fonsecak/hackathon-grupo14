@@ -90,4 +90,30 @@ https://www.figma.com/design/65wSlUl60gegzXIDbu8kP0/UX-Hackaton-Equipe-14?node-i
            ├── logout.php
            ├── meus_eventos.php
            └── navbar.php
+---
 
+### Src
+
+
+    src/
+    ├── controllers/
+    │ ├── certificadoController.js
+    │ ├── eventoController.js
+    │ ├── inscricaoController.js
+    │ ├── loginController.js
+    │ ├── palestranteController.js
+    │ └── usuarioController.js
+    │
+    ├── database/
+    │ ├── migrations/
+    │ └── connection.js
+    │
+    ├── middleware/
+    │
+    └── routes/
+    ├── certificados.js
+    ├── eventos.js
+    ├── inscricoes.js
+    ├── login.js
+    ├── palestrantes.js
+    └── usuarios.js
