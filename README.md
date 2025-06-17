@@ -35,11 +35,9 @@ https://www.figma.com/design/65wSlUl60gegzXIDbu8kP0/UX-Hackaton-Equipe-14?node-i
 
 ### Estrutura Back-Office
 
-src/
 
-└── main/
 
-    └── java/
+    src / main└── java/
     
         └── com/alfa/experience/
         
