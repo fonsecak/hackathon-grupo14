@@ -22,18 +22,16 @@ public class ListarAlunosGui extends JFrame {
     public ListarAlunosGui(AlunoService alunoService, TelaPrincipal telaPrincipal) {
         this.alunoService = alunoService;
         this.telaPrincipal = telaPrincipal;
-        inicializarComponentes();
-        montarLayout();
+        mostrarTela();
         carregarEventos();
     }
 
-    private void inicializarComponentes() {
+    private void mostrarTela() {
         var guiUtils = new GuiUtils();
-        setJMenuBar(guiUtils.criarMenuBar(this, telaPrincipal));
-        setTitle("Listar Alunos");
-        setSize(800, 400);
+        guiUtils.montarTelaPadrao(this, "Listar Alunos  - AlfaExperience", 800, 600);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(null);
+
+        setJMenuBar(guiUtils.criarMenuBar(this, telaPrincipal));
 
         cbEventos = new JComboBox<>();
         cbEventos.setFont(GuiUtils.FONTE_CAMPO);
@@ -97,9 +95,6 @@ public class ListarAlunosGui extends JFrame {
         panel.add(scrollPane, BorderLayout.CENTER);
         add(panel);
 
-    }
-
-    private void montarLayout() {
     }
 
     private void carregarEventos() {
