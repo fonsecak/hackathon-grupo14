@@ -117,3 +117,21 @@ https://www.figma.com/design/65wSlUl60gegzXIDbu8kP0/UX-Hackaton-Equipe-14?node-i
     ├── login.js
     ├── palestrantes.js
     └── usuarios.js
+
+    ---
+
+### Raíz do Projeto
+
+  
+    ├── .env
+    ├── app.js
+    ├── composer.json
+    ├── composer.lock
+    ├── index.php
+    ├── knexfile.js
+    ├── package-lock.json
+    ├── package.json
+    ├── README.md
+    └── vendor/
+
+    ---
