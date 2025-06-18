@@ -34,6 +34,10 @@ public class AlunoDao extends Dao implements DaoInterface {
         }
     }
 
+    //Atualiza o status de presença de uma inscrição específica com base no seu ID.
+
+    //Este método é mais específico, usando o id da inscrição em vez de combinar
+    // id_participante e id_evento, oferecendo maior flexibilidade para atualizações individuais.
     public boolean atualizarPresencaInscricao(int idInscricao, Boolean presenca) {
         try {
             var updateSql = "UPDATE inscricoes SET status = ? WHERE id = ?";
@@ -63,10 +67,15 @@ public class AlunoDao extends Dao implements DaoInterface {
         return List.of();
     }
 
+    //Lista todos os alunos inscritos em um evento específico.
     public List<Aluno> listarAlunosPorEvento(int idEvento) {
         List<Aluno> alunos = new ArrayList<>();
         Connection conn = getConnection();
         if (conn == null) return alunos;
+
+        //Usa uma query SQL com INNER JOIN para combinar as tabelas participantes, inscricoes, e eventos, filtrando pelo idEvento.
+        //Para cada linha do ResultSet, cria um objeto Aluno com os campos correspondentes (ID, nome, sobrenome, etc.),
+        //incluindo o status da inscrição (inscricao_status) como presença e o nome do evento.
 
         String sql = "SELECT p.id, p.nome, p.sobrenome, p.cpf, p.email, p.senha, p.empresa, p.status AS participante_status, i.status AS inscricao_status, e.nome AS nome_evento " +
                 "FROM participantes p " +
@@ -74,7 +83,7 @@ public class AlunoDao extends Dao implements DaoInterface {
                 "INNER JOIN eventos e ON i.id_evento = e.id " +
                 "WHERE i.id_evento = ? " +
                 "ORDER BY p.nome ASC";
-
+        //O uso de INNER JOIN garante que apenas alunos inscritos sejam retornados. Se um aluno não estiver inscrito, ele não aparecerá.
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, idEvento);
             ResultSet rs = stmt.executeQuery();
@@ -100,7 +109,8 @@ public class AlunoDao extends Dao implements DaoInterface {
         return alunos;
     }
 
-
+    //Busca o ID de uma inscrição com base no ID do aluno e do evento.
+    //para identificar a inscrição específica antes de atualizá-la (ex.: em atualizarPresencaInscricao).
     public int getIdInscricao(int idAluno, int idEvento) {
         Connection conn = getConnection();
         if (conn == null) return -1;
@@ -127,6 +137,7 @@ public class AlunoDao extends Dao implements DaoInterface {
             return eventos;
         }
 
+        //Usa SELECT DISTINCT id, nome FROM eventos para evitar duplicatas, garantindo que cada evento apareça apenas uma vez.
         String sql = "SELECT DISTINCT id, nome FROM eventos";
         try (PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
