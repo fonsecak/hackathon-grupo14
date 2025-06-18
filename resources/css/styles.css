@@ -1,40 +1,44 @@
+/* ===================== NAVBAR ===================== */
+/* Estiliza o menu de navegação principal com gradiente escuro */
 nav {
     /* Degradê escuro e moderno para o header */
     background: linear-gradient(90deg, #1a1832, #0b2545, #1976d2);
     padding: 0.8rem 0;
 }
 
-/* Estilos para o container da navbar */
+/* Container da navbar: organiza itens em linha e espaça entre eles */
 nav .container {
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
-/* Estilos para a logo */
+/* Logo da navbar: adiciona espaçamento à direita */
 nav .navbar-brand {
     margin-right: 2rem;
 }
 
+/* Logo: efeito de zoom suave ao passar o mouse */
 nav .logo-img {
     transition: transform 0.3s ease;
 }
-
 nav .logo-img:hover {
     transform: scale(1.05);
 }
 
-/* Estilos para os itens de navegação */
+/* Itens do menu: alinhamento em linha e espaçamento entre eles */
 nav .navbar-nav {
     display: flex;
     align-items: center;
     gap: 1.5rem;
 }
 
+/* Cada item do menu: posição relativa para possíveis submenus */
 nav .nav-item {
     position: relative;
 }
 
+/* Links do menu: cor clara, padding e efeito de hover */
 nav .nav-link {
     color: #f2f2f2 !important;
     font-weight: 500;
@@ -42,18 +46,18 @@ nav .nav-link {
     transition: all 0.3s ease;
     border-radius: 6px;
 }
-
 nav .nav-link:hover {
     background: rgba(255, 255, 255, 0.1);
 }
 
+/* Ícones nos links do menu: espaçamento à direita */
 nav .nav-link i {
     margin-right: 0.5rem;
     font-size: 1.1rem;
 }
 
-
-/* Estilos para os botões de ação */
+/* ===================== BOTÕES DA NAVBAR ===================== */
+/* Botão principal: fundo translúcido e borda clara */
 nav .btn-primary {
     background: rgba(255, 255, 255, 0.15);
     border: 1px solid rgba(255, 255, 255, 0.3);
@@ -61,20 +65,19 @@ nav .btn-primary {
     font-weight: 500;
     transition: all 0.3s ease;
 }
-
 nav .btn-primary:hover {
     background: rgba(255, 255, 255, 0.25);
     transform: translateY(-1px);
 }
 
-/* Estilos para o nome do usuário */
+/* Nome do usuário: cor clara e destaque */
 nav .navbar-text {
     color: #f2f2f2;
     font-weight: 500;
     margin-right: 1rem;
 }
 
-/* Estilos específicos para o botão de logout */
+/* Botão de logout: transparente, borda clara e efeito de hover */
 nav .btn-outline-light {
     background: transparent !important;
     border: 1px solid rgba(255, 255, 255, 0.3) !important;
@@ -82,28 +85,25 @@ nav .btn-outline-light {
     padding: 0.5rem 1.2rem;
     transition: all 0.3s ease;
 }
-
 nav .btn-outline-light:hover {
     background: rgba(255, 255, 255, 0.1) !important;
     color: #f2f2f2 !important;
     transform: translateY(-1px);
 }
 
-/* Responsividade */
+/* ===================== RESPONSIVIDADE DA NAVBAR ===================== */
+/* Ajusta layout do menu e botões em telas menores */
 @media (max-width: 991px) {
     nav .search-form {
         margin: 1rem 0;
         min-width: 100%;
     }
-    
     nav .navbar-nav {
         margin: 1rem 0;
     }
-    
     nav .nav-item {
         margin: 0.5rem 0;
     }
-    
     nav .btn-primary,
     nav .btn-outline-light {
         width: 100%;
@@ -111,8 +111,9 @@ nav .btn-outline-light:hover {
     }
 }
 
+/* ===================== FOOTER ===================== */
+/* Rodapé com gradiente escuro, texto claro e centralizado */
 footer {
-    /* Degradê escuro e moderno para o footer */
     background: linear-gradient(90deg, #1a1832, #0b2545, #1976d2);
     color: #f2f2f2;
     padding: 20px 0;
@@ -120,24 +121,24 @@ footer {
     margin-top: auto;
 }
 
+/* Links do rodapé: sem sublinhado e cor clara */
 footer ul li a {
     text-decoration: none !important;
     color: #f2f2f2 !important;
 }
-
 .footer-link {
     color: #f2f2f2 !important;
 }
-
 footer a {
     padding: 10px 0px;
     text-decoration: none;
 }
-
 .footerlinks{
     color: #f2f2f2 !important;
 }
 
+/* ===================== TÍTULOS DAS SEÇÕES ===================== */
+/* Títulos principais: azul escuro, centralizados, grandes e com sombra */
 main h2, .section-title, .main-section-title, .courses-section-title {
     color: #022840;
     font-weight: 700;
@@ -149,6 +150,7 @@ main h2, .section-title, .main-section-title, .courses-section-title {
     letter-spacing: 0.5px;
     text-shadow: 0 2px 8px rgba(14, 132, 179, 0.08);
 }
+/* Linha decorativa abaixo dos títulos */
 main h2::after, .section-title::after, .main-section-title::after, .courses-section-title::after {
     content: '';
     display: block;
@@ -392,6 +394,7 @@ main {
 }
 
 
+/* ===================== CARD DE CADASTRO ===================== */
 /* Estilização específica para o card de cadastro */
 .card.shadow.border-0 {
     max-width: 600px;
@@ -470,11 +473,13 @@ main {
     }
 }
 
+/* ===================== PÁGINA DE CADASTRO ===================== */
 /* Escurece o fundo somente na tela de cadastro */
 body.cadastro-page {
     background: linear-gradient(90deg, #ffffff, #ffffff, #8aa8e7);
 }
 
+/* ===================== EVENTO DETALHE ===================== */
 /* Estilos específicos para a página eventodetalhe.php */
 .evento-detalhe {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -911,6 +916,7 @@ body.cadastro-page {
     }
 }
 
+/* ===================== ESPAÇAMENTO ENTRE SEÇÕES ===================== */
 /* Espaçamento harmonizado entre seções principais */
 .container-section, .container.py-5 {
     margin-bottom: 2.2rem !important;

@@ -27,7 +27,13 @@ Guilherme Augusto Cardoso Carrera - RA - 14651
 
 
 Prototipo de baixa fidelidade
+Acessibilidade testada a font (escrita) e o background
+Site para teste: https://webaim.org/resources/contrastchecker/
 
+Site de do API de leitura de libras:
+https://softwarepublico.gov.br/gitlab/groups/vlibras
+
+Link do figma: 
 https://www.figma.com/design/65wSlUl60gegzXIDbu8kP0/UX-Hackaton-Equipe-14?node-id=0-1&p=f&t=EC0DxPiX4YyB5Ioc-0
 
 
@@ -135,3 +141,32 @@ https://www.figma.com/design/65wSlUl60gegzXIDbu8kP0/UX-Hackaton-Equipe-14?node-i
     └── vendor/
 
     ---
+
+
+Bibliotecas utilizadas neste programa:
+
+Backend (Node.js / PHP)
+
+- EXPRESS: Usada para criar APIs e servidores web, eke facilita o roteamento e o tratamento das requisições HTTP.
+- KNEX: Ajuda a escrever comandos SQL usando JavaScript, permite que você interaja com bancos de dados relacionais de forma flexível e portátil
+- CURL: Usada em PHP para fazer requisições HTTP para APIs externas.
+- CORS Controla quais dominios podem acessar sua API.
+- DOTENV: Gerencia variaveis de ambiente em arquivos .env.
+- JWT: Cria tokens que representam usuarios logdos. Pode ser lido e verificado no backend sem armazenar sessão no servidor.
+- BCRYPT: Usado para criptografar senhas.
+
+
+Frontend (PHP/HTML + JS)
+
+- TOASTR: Exibir notificações.
+- ENDOCODEURICOMPONENT (ou encodeURL): Funçao do JS usada para codificar parametros de URL, tornando seguro enviar Strings com espaços, acentos, etc.
+
+PHP
+
+- COMPOSER: Gerenciador de pacotes do PHP.
+- TCPDF: Biblioteca PHP para gerar arquivos PDF.
+
+HTML/CSS 
+
+- BOOTSTRAP: Responsividade, estilização.
+- VLIBRAS: Acessibilidade.
