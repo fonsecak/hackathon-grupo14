@@ -73,7 +73,7 @@ public class ListarAlunosGui extends JFrame {
                 int row = tabelaAlunos.getEditingRow(); // Pega a linha sendo editada
                 Boolean novaPresenca = (Boolean) getCellEditorValue(); // Pega o novo valor do checkbox
                 long idAluno = (Long) modeloTabela.getValueAt(row, 0); // Pega o ID do aluno na linha
-                int idEvento = getSelectedEventId(); // Pega o ID do evento selecionado
+                int idEvento = selecionarEventoId(); // Pega o ID do evento selecionado
                 int idInscricao = alunoService.getIdInscricao((int) idAluno, idEvento); // Busca o ID da inscrição
                 if (idInscricao != -1) { // Verifica se a inscrição foi encontrada
                     if (alunoService.atualizarPresenca(idInscricao, novaPresenca)) { // Tenta atualizar a presença
@@ -130,11 +130,11 @@ public class ListarAlunosGui extends JFrame {
     }
 
     // Método para obter o ID do evento selecionado com base no nome
-    private int getSelectedEventId() {
-        String selectedEventName = (String) cbEventos.getSelectedItem(); // Pega o nome do evento selecionado
-        if (selectedEventName == null) return -1; // Retorna -1 se nada estiver selecionado
+    private int selecionarEventoId() {
+        String selecionarEventoNome = (String) cbEventos.getSelectedItem(); // Pega o nome do evento selecionado
+        if (selecionarEventoNome == null) return -1; // Retorna -1 se nada estiver selecionado
         for (Map.Entry<Integer, String> entry : eventosMap.entrySet()) { // Itera sobre o mapa
-            if (entry.getValue() != null && entry.getValue().equals(selectedEventName)) { // Compara o nome
+            if (entry.getValue() != null && entry.getValue().equals(selecionarEventoNome)) { // Compara o nome
                 return entry.getKey(); // Retorna o ID correspondente
             }
         }
@@ -143,7 +143,7 @@ public class ListarAlunosGui extends JFrame {
 
     // Método para atualizar a tabela com os alunos do evento selecionado
     private void atualizarTabela() {
-        int idEvento = getSelectedEventId(); // Obtém o ID do evento selecionado
+        int idEvento = selecionarEventoId(); // Obtém o ID do evento selecionado
         if (idEvento == -1) { // Verifica se o ID é válido
             JOptionPane.showMessageDialog(this, "Selecione um evento válido.", "Erro", JOptionPane.ERROR_MESSAGE);
             return; // Sai do método se inválido
