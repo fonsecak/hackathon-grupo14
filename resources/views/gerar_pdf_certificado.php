@@ -69,7 +69,6 @@ if ($token) {
                 </div>
                 <div class="assinatura">
                     <p>Este certificado é válido e autenticado</p>
-                    <p>ID do Certificado: ' . $certificado['id'] . '</p>
                 </div>
             </div>
         </div>';
