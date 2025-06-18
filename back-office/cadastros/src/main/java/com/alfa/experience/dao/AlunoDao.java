@@ -19,19 +19,7 @@ public class AlunoDao extends Dao implements DaoInterface {
 
     @Override
     public boolean update(Object entity) {
-        try {
-            var aluno = (Aluno) entity;
-            var updateSql = "UPDATE inscricoes SET status = ? WHERE id_participante = ? AND id_evento = ?";
-            var ps = getConnection().prepareStatement(updateSql);
-            ps.setBoolean(1, aluno.getPresenca() != null ? aluno.getPresenca() : false);
-            ps.setLong(2, aluno.getId());
-            ps.setInt(3, 1);
-            int rowsAffected = ps.executeUpdate();
-            return rowsAffected > 0;
-        } catch (Exception e) {
-            System.err.println("Erro ao atualizar status: " + e.getMessage());
-            return false;
-        }
+        return false;
     }
 
     public boolean atualizarPresencaInscricao(int idInscricao, Boolean presenca) {
