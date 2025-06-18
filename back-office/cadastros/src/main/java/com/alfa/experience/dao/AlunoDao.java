@@ -22,8 +22,22 @@ public class AlunoDao extends Dao implements DaoInterface {
         return false;
     }
 
-    //Atualiza o status de presença de uma inscrição específica com base no seu ID.
+    @Override
+    public boolean delete(Long pk) {
+        return false;
+    }
 
+    @Override
+    public Object select(Long pk) {
+        return null;
+    }
+
+    @Override
+    public List<Object> selectAll() {
+        return List.of();
+    }
+
+    //Atualiza o status de presença de uma inscrição específica com base no seu ID.
     //Este método é mais específico, usando o id da inscrição em vez de combinar
     // id_participante e id_evento, oferecendo maior flexibilidade para atualizações individuais.
     public boolean atualizarPresencaInscricao(int idInscricao, Boolean presenca) {
@@ -38,21 +52,6 @@ public class AlunoDao extends Dao implements DaoInterface {
             System.err.println("Erro ao atualizar status: " + e.getMessage());
             return false;
         }
-    }
-
-    @Override
-    public boolean delete(Long pk) {
-        return false;
-    }
-
-    @Override
-    public Object select(Long pk) {
-        return null;
-    }
-
-    @Override
-    public List<Object> selectAll() {
-        return List.of();
     }
 
     //Lista todos os alunos inscritos em um evento específico.
