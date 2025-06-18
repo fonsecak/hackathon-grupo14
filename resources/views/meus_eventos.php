@@ -60,7 +60,7 @@ if (is_array($inscricoes)) {
                                     <?php foreach ($eventos as $evento): ?>
                                         <tr>
                                             <td class="fw-bold text-primary" style="min-width:180px;">
-                                                <?= htmlspecialchars($evento['nome']) ?>
+                                                <a href="eventodetalhe.php?id=<?= $evento['id'] ?>" class="text-decoration-none" style="color: #022840;"><?= htmlspecialchars($evento['nome']) ?></a> 
                                             </td>
                                             <td><?= date('d/m/Y', strtotime($evento['data_hora_inicio'])) ?></td>
                                             <td><?= htmlspecialchars($evento['local']) ?></td>

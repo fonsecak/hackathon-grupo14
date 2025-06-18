@@ -11,22 +11,6 @@ module.exports = {
   }
 },
 
-  store: async (req, res) => {
-    const {
-      nome,
-      descricao,
-      data_hora_inicio,
-      data_hora_fim,
-      local,
-      valor_inscricao,
-      publico_alvo,
-      objetivo,
-      banner,
-      id_palestrante: palestrante,
-      vagas_maxima
-    } = req.body;    
-  },
-
   randomHighlights: async (req, res) => {
   try {
     const destaques = await db('eventos').orderByRaw('RAND()').limit(3);

@@ -480,19 +480,6 @@ body.cadastro-page {
 }
 
 /* ===================== EVENTO DETALHE ===================== */
-/* Estilos específicos para a página eventodetalhe.php */
-.evento-detalhe {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    line-height: 1.6;
-    margin: 0;
-    padding: 0;
-    background: linear-gradient(90deg, #f1f3f5, #ffffff, #ffffff);
-    color: #333;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-
 .evento-detalhe main {
     flex-grow: 1;
 }
