@@ -117,6 +117,14 @@ $id_participante = $_SESSION['user']['id'] ?? null;
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script>
+        // Configurações do Toastr
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "3000"
+        };
+
         $(document).ready(function() {
             var id_participante = <?php echo json_encode($id_participante); ?>;
             var id_evento = <?php echo json_encode($id); ?>;
@@ -147,7 +155,7 @@ $id_participante = $_SESSION['user']['id'] ?? null;
             $('#btnInscrever').on('click', function(e) {
                 e.preventDefault();
                 <?php if (!isset($_SESSION['user'])): ?>
-                    alert('Você precisa estar logado para se inscrever!');
+                    toastr.error('Você precisa estar logado para se inscrever!');
                 <?php else: ?>
                     var modal = new bootstrap.Modal(document.getElementById('modalInscricao'));
                     modal.show();
@@ -158,10 +166,10 @@ $id_participante = $_SESSION['user']['id'] ?? null;
             $('#formInscricao').on('submit', function(e) {
                 e.preventDefault();
                 // Pega os dados do formulário
-                var cpf = $('#cpf').val();
-                var email = $('#email').val();
+                var cpf = $('#cpfInscricao').val();
+                var email = $('#emailInscricao').val();
                 if (!id_participante) {
-                    alert('Usuário não identificado. Faça login novamente.');
+                    toastr.error('Usuário não identificado. Faça login novamente.');
                     return;
                 }
                 // Envia via AJAX para o backend
@@ -173,14 +181,14 @@ $id_participante = $_SESSION['user']['id'] ?? null;
                     data: JSON.stringify({ id_participante: id_participante, id_evento: id_evento }),
                     success: function(res) {
                         $('#modalInscricao').modal('hide');
-                        alert('Inscrição realizada com sucesso!');
+                        toastr.success('Inscrição realizada com sucesso!');
                         atualizarBotoesInscricao();
                     },
                     error: function(xhr) {
                         if (xhr.status === 409) {
-                            alert('Você já está inscrito neste evento!');
+                            toastr.warning('Você já está inscrito neste evento!');
                         } else {
-                            alert('Erro ao realizar inscrição. Tente novamente.');
+                            toastr.error('Erro ao realizar inscrição. Tente novamente.');
                         }
                     }
                 });
@@ -197,11 +205,11 @@ $id_participante = $_SESSION['user']['id'] ?? null;
                         headers: token ? { 'Authorization': 'Bearer ' + token } : {},
                         data: JSON.stringify({ id_participante: id_participante, id_evento: id_evento }),
                         success: function(res) {
-                            alert('Inscrição cancelada com sucesso!');
+                            toastr.success('Inscrição cancelada com sucesso!');
                             atualizarBotoesInscricao();
                         },
                         error: function() {
-                            alert('Erro ao cancelar inscrição. Tente novamente.');
+                            toastr.error('Erro ao cancelar inscrição. Tente novamente.');
                         }
                     });
                 }
@@ -220,12 +228,12 @@ $id_participante = $_SESSION['user']['id'] ?? null;
           <div class="modal-body">
             <form id="formInscricao">
               <div class="mb-3">
-                <label for="cpf" class="form-label">CPF</label>
-                <input type="text" class="form-control" id="cpf" name="cpf" maxlength="11" required placeholder="Digite seu CPF">
+                <label for="cpfInscricao" class="form-label">CPF</label>
+                <input type="text" class="form-control" id="cpfInscricao" name="cpf" maxlength="11" required placeholder="Digite seu CPF">
               </div>
               <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" name="email" required placeholder="Digite seu email">
+                <label for="emailInscricao" class="form-label">Email</label>
+                <input type="email" class="form-control" id="emailInscricao" name="email" required placeholder="Digite seu email">
               </div>
             </form>
           </div>

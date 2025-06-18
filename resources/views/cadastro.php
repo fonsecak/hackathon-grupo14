@@ -56,11 +56,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
   <body class="cadastro-page">
-    <?php if (isset($sucesso) && $sucesso): ?>
-  <div class="alert alert-success">Cadastro realizado com sucesso!</div>
-<?php elseif (isset($erro)): ?>
-  <div class="alert alert-danger"><?= htmlspecialchars($erro) ?></div>
-<?php endif; ?>
 
 <?php include 'navbar.php'; ?>
 <main class="flex-grow-1">
@@ -70,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="card shadow border-0">
                         <div class="card-body p-4">
                             <h2 class="mb-4 text-center">Cadastro de Usuário</h2>
-                            <form method="post" action="">
+                            <form method="post" action="" id="formCadastro">
                                 <div class="mb-3">
                                     <label for="nome" class="form-label">Nome</label>
                                     <input type="text" class="form-control" id="nome" name="nome" placeholder="Digite seu nome" required>
@@ -86,12 +81,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <input type="text" class="form-control" id="cpf" name="cpf" placeholder="Digite seu CPF" required maxlength="11" inputmode="numeric" pattern="\d{11}">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="email" class="form-label">E-mail</label>
-                                    <input type="email" class="form-control" id="email" name="email" placeholder="Digite seu e-mail" required>
+                                    <label for="emailCadastro" class="form-label">E-mail</label>
+                                    <input type="email" class="form-control" id="emailCadastro" name="email" placeholder="Digite seu e-mail" required>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="senha" class="form-label">Senha</label>
-                                    <input type="password" class="form-control" id="senha" name="senha" placeholder="Digite sua senha" required>
+                                    <label for="senhaCadastro" class="form-label">Senha</label>
+                                    <input type="password" class="form-control" id="senhaCadastro" name="senha" placeholder="Digite sua senha" required>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label" for="empresa">Empresa ou Universidade</label>
@@ -134,16 +129,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       nome: document.getElementById('nome'),
       sobrenome: document.getElementById('sobrenome'),
       cpf: document.getElementById('cpf'),
-      email: document.getElementById('email'),
-      senha: document.getElementById('senha'),
+      email: document.getElementById('emailCadastro'),
+      senha: document.getElementById('senhaCadastro'),
       empresa: document.getElementById('empresa')
     };
 
-    // Exibir erro visual + toastr
+    // Exibir erro visual
     const mostrarErro = (mensagem, campo) => {
   if (!campo.classList.contains('is-invalid')) {
-    toastr.clear();
-    toastr.error(mensagem);
     campo.classList.add('is-invalid');
   }
 };
@@ -151,7 +144,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 const limparErro = (campo) => {
   if (campo.classList.contains('is-invalid')) {
     campo.classList.remove('is-invalid');
-    toastr.clear();
   }
 };
 
@@ -212,6 +204,20 @@ const limparErro = (campo) => {
     }));
   });
 </script>
+
+<?php if (isset($sucesso) && $sucesso): ?>
+<script>
+  $(document).ready(function() {
+    toastr.success('Cadastro realizado com sucesso!');
+  });
+</script>
+<?php elseif (isset($erro) && $erro): ?>
+<script>
+  $(document).ready(function() {
+    toastr.error('<?= htmlspecialchars($erro) ?>');
+  });
+</script>
+<?php endif; ?>
 
 
 

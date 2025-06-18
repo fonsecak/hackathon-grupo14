@@ -51,6 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Bootstrap Icons CDN -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <title>AlfaExperience</title>
 </head>
 
@@ -62,14 +63,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <?php include 'footer.php'; ?>
 
-    <?php if (!empty($erro)): ?>
-<script>
-  const myModal = new bootstrap.Modal(document.getElementById('loginModal'));
-  myModal.show();
-</script>
-<?php endif; ?>
-<?php include 'login-modal.php'; ?>
-
     
 <div vw class="enabled">
   <div vw-access-button class="active"></div>
@@ -78,13 +71,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
 <script>
   new window.VLibras.Widget('https://vlibras.gov.br/app');
 </script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
+<script>
+  // Configurações do Toastr
+  toastr.options = {
+    "closeButton": true,
+    "progressBar": true,
+    "positionClass": "toast-top-right",
+    "timeOut": "3000"
+  };
 
+  <?php if (!empty($erro)): ?>
+  $(document).ready(function() {
+    toastr.error('<?= htmlspecialchars($erro) ?>');
+    const myModal = new bootstrap.Modal(document.getElementById('loginModal'));
+    myModal.show();
+  });
+  <?php endif; ?>
+</script>
 
 </body>
 
